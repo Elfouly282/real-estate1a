@@ -14,7 +14,7 @@ TextStyle _getTextStyle(
     fontWeight: fontWeight,
     height: height,
     decoration: decoration,
-    fontFamily: AppFonts.questFont,
+    fontFamily: AppFonts.Poppins,
   );
 }
 
@@ -70,6 +70,15 @@ TextStyle getBoldStyle({
   TextDecoration? decoration,
 }) {
   return _getTextStyle(fontSize, FontWeight.w700, color, height, decoration);
+}
+TextStyle getSemiBold({
+  required double fontSize,
+  required Color color,
+  double? height,
+  TextDecoration? decoration,
+  FontWeight? fontWeight
+}) {
+  return _getTextStyle(fontSize, fontWeight!, color, height, decoration);
 }
 
 TextDirection getTextDirectionFromText(String text) {

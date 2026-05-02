@@ -49,3 +49,7 @@ class OrderNotFoundException extends Failure {
 class PageNotFoundException extends Failure {
   PageNotFoundException(String message) : super(message: message);
 }
+
+class LocationFailure extends Failure {
+   LocationFailure(String message) : super(message: message);
+}

@@ -7,7 +7,7 @@ import 'package:real_estate_1a/features/home/domain/entities/home_response_entit
 import 'package:real_estate_1a/features/home/presentation/widgets/property_badge.dart';
 import 'package:real_estate_1a/gen/assets.gen.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../pages/star_rating.dart';
+import 'star_rating.dart';
 
 class BestOfferCard extends StatefulWidget {
   final PropertyEntity property;
@@ -155,7 +155,7 @@ class _BestOfferCardState extends State<BestOfferCard> {
               SizedBox(width: 4.w),
 
               Text(
-                "${p.latitude?.toStringAsFixed(1) ?? '0'} km",
+                "${p.distanceKm?? '0'} km",
                 style: getRegularStyle(
                   fontSize: 10,
                   color: AppColors.grey2,
@@ -182,7 +182,7 @@ class _BestOfferCardState extends State<BestOfferCard> {
                 ),
               ),
 
-              StarRating(rating: 5 ?? 0),
+              StarRating(rating: p.rate ?? 0),
             ],
           ),
         ],

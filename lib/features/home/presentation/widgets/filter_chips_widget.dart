@@ -1,51 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:real_estate_1a/core/utils/app_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_fonts.dart';
+import '../../../../core/utils/app_styles.dart';
+import '../cubit/home/home_cubit.dart';
+import '../cubit/home/home_state.dart';
 
-
-class FilterChipsWidget extends StatelessWidget {
-  final List<String> filters;
-  final int selectedIndex;
-  final ValueChanged<int> onSelected;
-
-  const FilterChipsWidget({
-    super.key,
-    required this.filters,
-    required this.selectedIndex,
-    required this.onSelected,
-  });
-
+class FilterChips extends StatelessWidget {
+  const FilterChips();
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        itemCount: filters.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 8),
-        itemBuilder: (_, i) {
-          final selected = selectedIndex == i;
-          return GestureDetector(
-            onTap: () => onSelected(i),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
-              decoration: BoxDecoration(
-                color: selected ? AppColors.primaryColor : AppColors.babyBlue,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                filters[i],
-                style: getSemiBold(fontSize: 14, color:selected ? AppColors.white : AppColors.babyBlue,
-                  fontWeight:
+    return BlocBuilder<HomeCubit, HomeState>(
+      builder: (context, state) {
+        if (state is! HomeSuccess) return const SizedBox.shrink();
+
+        final cubit   = context.read<HomeCubit>();
+        final categories = [
+          'All',
+          ...state.data.categories.map((c) => c.name),
+        ];
+        return SizedBox(
+          height: 36.h,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            itemCount: categories.length, // ✅
+            separatorBuilder: (_, __) => SizedBox(width: 8.w),
+            itemBuilder: (_, i) {
+              final selected = cubit.selectedFilterIndex == i;
+              return GestureDetector(
+                onTap: () => cubit.changeFilter(i),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 18.w, vertical: 6.h),
+                  decoration: BoxDecoration(
+                    color: selected
+                        ? AppColors.primaryColor
+                        : AppColors.babyBlue,
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: selected
+                          ? AppColors.primaryColor
+                          : AppColors.grey2,
+                    ),
+                  ),
+                  child: Text(
+                    categories[i],
+                    style: getRegularStyle(
+                      fontSize: 14,
+                      color: selected
+                          ? Colors.white
+                          : AppColors.primaryColor,
+                    ).copyWith(
+                      fontWeight:
                       selected ? FontWeight.w600 : FontWeight.normal,
+                      fontFamily: AppFonts.Poppins,
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

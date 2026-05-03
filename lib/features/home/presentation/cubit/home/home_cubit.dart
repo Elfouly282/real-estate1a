@@ -11,9 +11,6 @@ class HomeCubit extends Cubit<HomeState> {
 
   HomeCubit({required this.getHomeDataUseCase}) : super(HomeInitial());
 
-  // ── Filter ────────────────────────────────────────────────────────────────
-  static const filters = ['All', 'Sale', 'Rent','House','Apartment'];
-
   int _selectedFilterIndex = 0;
   int get selectedFilterIndex => _selectedFilterIndex;
 
@@ -30,32 +27,38 @@ class HomeCubit extends Cubit<HomeState> {
     result.fold(
           (failure) => emit(HomeError(failure.message)),
           (data) {
-        _allBestSelling = data.bestSelling; // ← احفظ الأصلية
-        _allNearToYou   = data.recommended; // ← احفظ الأصلية
+        _allBestSelling = data.bestSelling;
+        _allNearToYou   = data.recommended;
         emit(HomeSuccess(data));
       },
     );
   }
 
-  // ── Filter by listing type ────────────────────────────────────────────────
+  // ── Filter by category ────────────────────────────────────────────────────
 
   void changeFilter(int index) {
     _selectedFilterIndex = index;
     final current = state;
     if (current is! HomeSuccess) return;
 
-    final filter = filters[index]; // 'All' | 'Sale' | 'Rent'
+    // index 0 = 'All' → باقي الـ indexes = categories
+    final isAll = index == 0;
 
-    final filteredBestSelling = filter == 'All'
+    // جيب اسم الـ category المختارة
+    final selectedCategory = isAll
+        ? null
+        : current.data.categories[index - 1].name; // ← -1 عشان 'All' في index 0
+
+    final filteredBestSelling = isAll
         ? _allBestSelling
         : _allBestSelling
-        .where((p) => p.listingType == filter.toLowerCase())
+        .where((p) => p.category.name == selectedCategory)
         .toList();
 
-    final filteredRecommended = filter == 'All'
+    final filteredRecommended = isAll
         ? _allNearToYou
         : _allNearToYou
-        .where((p) => p.listingType == filter.toLowerCase())
+        .where((p) => p.category.name == selectedCategory)
         .toList();
 
     emit(HomeSuccess(

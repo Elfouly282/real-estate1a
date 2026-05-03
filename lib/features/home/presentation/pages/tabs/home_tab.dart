@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
-import 'package:real_estate_1a/core/utils/app_fonts.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/appbar/app_bar_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/home/home_cubit.dart';
@@ -11,6 +10,7 @@ import 'package:real_estate_1a/features/home/presentation/widgets/best_offer_car
 import 'package:real_estate_1a/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/search_bar.dart';
 import '../../../../../core/di/di.dart';
+import '../../widgets/filter_chips_widget.dart';
 import '../../widgets/nearest_property_card.dart';
 
 class HomeTab extends StatelessWidget {
@@ -56,7 +56,7 @@ class _HomeTabView extends StatelessWidget {
               SizedBox(height: 16.h),
               const SearchBarWidget(),
               SizedBox(height: 16.h),
-              const _FilterChips(),
+              const FilterChips(),
               SizedBox(height: 20.h),
               const _HomeContent(),
               SizedBox(height: 20.h),
@@ -67,71 +67,6 @@ class _HomeTabView extends StatelessWidget {
     );
   }
 }
-
-// ── Filter Chips ──────────────────────────────────────────────────────────────
-
-class _FilterChips extends StatelessWidget {
-  const _FilterChips();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<HomeCubit, HomeState>(
-      builder: (context, state) {
-        if (state is! HomeSuccess) return const SizedBox.shrink();
-
-        final cubit   = context.read<HomeCubit>();
-        final filters = HomeCubit.filters; // ✅ ['All', 'Sale', 'Rent']
-
-        return SizedBox(
-          height: 36.h,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: filters.length, // ✅
-            separatorBuilder: (_, __) => SizedBox(width: 8.w),
-            itemBuilder: (_, i) {
-              final selected = cubit.selectedFilterIndex == i;
-              return GestureDetector(
-                onTap: () => cubit.changeFilter(i),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  padding: EdgeInsets.symmetric(
-                      horizontal: 18.w, vertical: 6.h),
-                  decoration: BoxDecoration(
-                    color: selected
-                        ? AppColors.primaryColor
-                        : AppColors.babyBlue,
-                    borderRadius: BorderRadius.circular(12.r),
-                    border: Border.all(
-                      color: selected
-                          ? AppColors.primaryColor
-                          : AppColors.grey2,
-                    ),
-                  ),
-                  child: Text(
-                    filters[i], // ✅
-                    style: getRegularStyle(
-                      fontSize: 14,
-                      color: selected
-                          ? Colors.white
-                          : AppColors.primaryColor,
-                    ).copyWith(
-                      fontWeight:
-                      selected ? FontWeight.w600 : FontWeight.normal,
-                      fontFamily: AppFonts.Poppins,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-}
-
-// ── Home Content ──────────────────────────────────────────────────────────────
-
 class _HomeContent extends StatelessWidget {
   const _HomeContent();
 
@@ -183,7 +118,7 @@ class _HomeContent extends StatelessWidget {
                   itemCount: state.data.bestSelling.length,
                   separatorBuilder: (_, __) => SizedBox(width: 12.w),
                   itemBuilder: (_, i) =>
-                      BestOfferCard(property: state.data.bestSelling[i]),
+                      GestureDetector(child: BestOfferCard(property: state.data.bestSelling[i]),onTap: (){},),
                 ),
               ),
               SizedBox(height: 20.h),
@@ -197,7 +132,7 @@ class _HomeContent extends StatelessWidget {
                 itemCount: state.data.recommended.length,
                 separatorBuilder: (_, __) => SizedBox(height: 12.h),
                 itemBuilder: (_, i) =>
-                 NearestPropertyCard(property:state.data.recommended[i]),
+                 GestureDetector(child: NearestPropertyCard(property:state.data.recommended[i]),onTap: (){},),
               ),
             ],
           );

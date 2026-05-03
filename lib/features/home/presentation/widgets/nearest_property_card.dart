@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
 import 'package:real_estate_1a/features/home/domain/entities/home_response_entity.dart';
-
+import 'package:real_estate_1a/features/home/presentation/widgets/property_badge.dart';
+import 'package:real_estate_1a/gen/assets.gen.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
-import '../pages/star_rating.dart';
+import 'star_rating.dart';
 
 class NearestPropertyCard extends StatefulWidget {
   final PropertyEntity property;
@@ -24,6 +26,7 @@ class _NearestPropertyCardState extends State<NearestPropertyCard> {
     final p = widget.property;
 
     return Container(
+      height: 151.h,
       padding: EdgeInsets.all(8.w),
       decoration: BoxDecoration(
         color: AppColors.white,
@@ -46,26 +49,36 @@ class _NearestPropertyCardState extends State<NearestPropertyCard> {
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(12.r),
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        width: 147.w,
-        height: 151.h,
-        fit: BoxFit.cover,
-        placeholder: (_, __) => Container(
-          color: Colors.grey[200],
-          child: const Center(
-            child: CircularProgressIndicator(strokeWidth: 2),
+      child: Stack(
+        children:[ CachedNetworkImage(
+          imageUrl: imageUrl,
+          width: 147.w,
+          height: 151.h,
+          fit: BoxFit.cover,
+          placeholder: (_, __) => Container(
+            color: Colors.grey[200],
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+          errorWidget: (_, __, ___) => Container(
+            color: Colors.grey[200],
+            child: Icon(
+              Icons.home_rounded,
+              color: Colors.grey[400],
+              size: 40,
+            ),
           ),
         ),
-        errorWidget: (_, __, ___) => Container(
-          color: Colors.grey[200],
-          child: Icon(
-            Icons.home_rounded,
-            color: Colors.grey[400],
-            size: 40,
+          Positioned(
+            top: 8.h,
+            left: 8.w,
+            child: PropertyBadge(
+              label: p.tagLabel,
+              color: AppColors.black,
+            ),
           ),
-        ),
-      ),
+      ]),
     );
   }
 
@@ -78,7 +91,9 @@ class _NearestPropertyCardState extends State<NearestPropertyCard> {
           children: [
             Expanded(
               child: Text(
-                p.title,
+                p.title.contains('-')
+                    ? p.title.split('-').last.trim()
+                    : p.title,
                 style: getMediumStyle(fontSize: 14, color: AppColors.black),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -100,17 +115,14 @@ class _NearestPropertyCardState extends State<NearestPropertyCard> {
         // Address + Distance
         Row(
           children: [
-            Icon(Icons.location_on,
-                color: AppColors.primaryColor, size: 12),
-
+           CustomSvgImage(path: Assets.svg.location,height: 16.h,width: 16.h,),
             SizedBox(width: 4.w),
-
             Expanded(
               child: Text(
                 p.address ?? '',
                 style: getRegularStyle(
                   fontSize: 11,
-                  color: AppColors.primaryColor,
+                  color: AppColors.grey,
                 ),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
@@ -118,14 +130,15 @@ class _NearestPropertyCardState extends State<NearestPropertyCard> {
             ),
 
             SizedBox(width: 6.w),
+            Text("|",style: TextStyle(color: AppColors.grey),),
+            SizedBox(width: 6.w),
 
-            Icon(Icons.near_me_outlined,
-                size: 10, color: Colors.grey),
+            CustomSvgImage(path: Assets.svg.navigation),
 
             SizedBox(width: 3.w),
-
+    
             Text(
-              "${p.latitude?.toStringAsFixed(1) ?? '0'} km",
+              "${p.distanceKm?? '0'} km",
               style: getRegularStyle(
                 fontSize: 10,
                 color: AppColors.grey2,
@@ -148,7 +161,7 @@ class _NearestPropertyCardState extends State<NearestPropertyCard> {
                 fontWeight: FontWeight.w600,
               ),
             ),
-            StarRating(rating: 5 ?? 0),
+            StarRating(rating: p.rate ?? 0),
           ],
         ),
       ],

@@ -124,10 +124,10 @@ class _BestOfferCardState extends State<BestOfferCard> {
             ],
           ),
 
-          SizedBox(height: 4.h),
+          SizedBox(height: 12.h),
 
-          // Address + Distance
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustomSvgImage(
                 path: Assets.svg.location,
@@ -135,24 +135,23 @@ class _BestOfferCardState extends State<BestOfferCard> {
                 height: 12.h,
               ),
               SizedBox(width: 4.w),
-
               Expanded(
                 child: Text(
                   p.address ?? '',
                   style: getRegularStyle(
                     fontSize: 10,
-                    color: AppColors.grey2,
+                    color: AppColors.black,
                   ),
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.clip,
                   maxLines: 1,
                 ),
               ),
+              Text("|",style: TextStyle(color: AppColors.grey),),
+              SizedBox(width: 12.w),
 
-              SizedBox(width: 6.w),
 
               CustomSvgImage(path: Assets.svg.navigation),
 
-              SizedBox(width: 4.w),
 
               Text(
                 "${p.distanceKm?? '0'} km",
@@ -164,7 +163,7 @@ class _BestOfferCardState extends State<BestOfferCard> {
             ],
           ),
 
-          SizedBox(height: 6.h),
+          SizedBox(height: 12.h),
 
           // Price + Rating
           Row(
@@ -178,7 +177,7 @@ class _BestOfferCardState extends State<BestOfferCard> {
                     color: AppColors.black,
                     fontWeight: FontWeight.w600,
                   ),
-                  overflow: TextOverflow.ellipsis,
+                  overflow: TextOverflow.clip,
                 ),
               ),
 

@@ -96,7 +96,7 @@ class _NearestPropertyCardState extends State<NearestPropertyCard> {
                     : p.title,
                 style: getMediumStyle(fontSize: 14, color: AppColors.black),
                 maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.clip,
               ),
             ),
             GestureDetector(

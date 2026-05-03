@@ -113,12 +113,13 @@ class _HomeContent extends StatelessWidget {
               SizedBox(height: 12.h),
               SizedBox(
                 height: 260.h,
-                child: ListView.separated(
+                child:  state.data.bestSelling.isEmpty?Center(child: Text("No properties found",style:TextStyle(color: AppColors.primaryColor),)):
+                ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: state.data.bestSelling.length,
                   separatorBuilder: (_, __) => SizedBox(width: 12.w),
                   itemBuilder: (_, i) =>
-                      GestureDetector(child: BestOfferCard(property: state.data.bestSelling[i]),onTap: (){},),
+                      InkWell(child: BestOfferCard(property: state.data.bestSelling[i]),onTap: (){},),
                 ),
               ),
               SizedBox(height: 20.h),
@@ -126,13 +127,14 @@ class _HomeContent extends StatelessWidget {
               // ── Nearest You ───────────────────────────────────────────────
               _SectionHeader(title: 'Nearest You', onViewAll: () {}),
               SizedBox(height: 12.h),
+              state.data.recommended.isEmpty?Center(child: Text("No nearby properties found",style:TextStyle(color: AppColors.primaryColor),)):
               ListView.separated(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: state.data.recommended.length,
                 separatorBuilder: (_, __) => SizedBox(height: 12.h),
                 itemBuilder: (_, i) =>
-                 GestureDetector(child: NearestPropertyCard(property:state.data.recommended[i]),onTap: (){},),
+                 InkWell(child: NearestPropertyCard(property:state.data.recommended[i]),onTap: (){},),
               ),
             ],
           );

@@ -1,9 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../cubit/home/home_cubit.dart';
 
-class SearchBarWidget extends StatelessWidget {
+class SearchBarWidget extends StatefulWidget {
   const SearchBarWidget({super.key});
+
+  @override
+  State<SearchBarWidget> createState() => _SearchBarWidgetState();
+}
+
+class _SearchBarWidgetState extends State<SearchBarWidget> {
+  final _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +28,24 @@ class SearchBarWidget extends StatelessWidget {
         children: [
           Expanded(
             child: TextField(
+              controller: _controller,
+              onChanged: (value) =>
+                  context.read<HomeCubit>().searchProperties(value),
               decoration: InputDecoration(
                 hintText: 'Search your home',
-                prefixIcon:
-                const Icon(Icons.search, color: Colors.grey, size: 24),
+                prefixIcon: const Icon(
+                    Icons.search, color: Colors.grey, size: 24),
+                // ── clear button ──────────────────────────────────
+                suffixIcon: _controller.text.isNotEmpty
+                    ? GestureDetector(
+                  onTap: () {
+                    _controller.clear();
+                    context.read<HomeCubit>().clearSearch();
+                  },
+                  child: const Icon(
+                      Icons.close, color: Colors.grey, size: 18),
+                )
+                    : null,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -27,9 +56,9 @@ class SearchBarWidget extends StatelessWidget {
               ),
             ),
           ),
-           SizedBox(width: 10.w),
+          SizedBox(width: 10.w),
           GestureDetector(
-            onTap: (){},
+            onTap: () {},
             child: Container(
               width: 42.w,
               height: 44.h,
@@ -37,7 +66,8 @@ class SearchBarWidget extends StatelessWidget {
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(16.r),
               ),
-              child: const Icon(Icons.tune_rounded, color: Colors.black, size: 20),
+              child: const Icon(
+                  Icons.tune_rounded, color: Colors.black, size: 20),
             ),
           ),
         ],

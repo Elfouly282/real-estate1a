@@ -118,4 +118,48 @@ class HomeCubit extends Cubit<HomeState> {
   }
 
   double _degToRad(double deg) => deg * (pi / 180);
+
+
+
+  //search functions
+// في home_cubit.dart أضف
+
+  String _searchQuery = '';
+
+  void searchProperties(String query) {
+    _searchQuery = query.trim().toLowerCase();
+    final current = state;
+    if (current is! HomeSuccess) return;
+
+    final filtered = _allBestSelling.where((p) {
+      return p.title.toLowerCase().contains(_searchQuery) ||
+          p.address.toLowerCase().contains(_searchQuery) ||
+          p.category.name.toLowerCase().contains(_searchQuery);
+    }).toList();
+    final filteredNearest = _allNearToYou.where((p) {
+      return p.title.toLowerCase().contains(_searchQuery) ||
+          p.address.toLowerCase().contains(_searchQuery) ||
+          p.category.name.toLowerCase().contains(_searchQuery);
+    }).toList();
+    emit(HomeSuccess(
+      HomeResponseEntity(
+        categories:  current.data.categories,
+        bestSelling: filtered,
+        featured:    current.data.featured,
+        recommended: filteredNearest,
+      ),
+    ));
+  }
+
+  void clearSearch() {
+    _searchQuery = '';
+    final current = state;
+    if (current is! HomeSuccess) return;
+    emit(HomeSuccess(HomeResponseEntity(
+      categories:  current.data.categories,
+      bestSelling: _allBestSelling,
+      featured:    current.data.featured,
+      recommended: _allNearToYou,
+    )));
+  }
 }

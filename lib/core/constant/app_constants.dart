@@ -1,7 +1,11 @@
 class AppConstants {
   // API Configuration
+  static const String RealEstatebaseUrl="https://real.newcinderella.online/";
   static const String KhamnyBaseUrl = 'https://washing-cars.storage-te.com';
 
+  ///REAL ESTATE END POINT
+
+  static const String homeEndPoint = 'api/v1/home';
   // Auth Endpoints
   static const String registerEndpoint = '/api/auth/register';
   static const String loginEndpoint = '/api/auth/login';

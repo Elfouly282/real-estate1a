@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/features/home/presentation/pages/home_screen.dart';
 
+import 'core/bloc observe/bloc_service.dart';
 import 'core/di/di.dart';
 void main() async{
+  // await initAppModule();
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = MyBlocObserver();
+
   await configureDependencies();
   runApp(const MyApp());
 }

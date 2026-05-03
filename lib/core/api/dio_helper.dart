@@ -1,19 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:injectable/injectable.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../constant/app_constants.dart';
-import '../di.dart';
+import '../di/di.dart';
 import '../funcations/app_functions.dart';
 import '../security/security_helper.dart';
-
+@singleton
 class DioHelper {
   static Dio? dio;
 
   static Future<void> init() async {
     dio = Dio(
       BaseOptions(
-        baseUrl: AppConstants.KhamnyBaseUrl,
+        baseUrl: AppConstants.RealEstatebaseUrl,
         receiveDataWhenStatusError: true,
       ),
     );
@@ -42,7 +43,6 @@ class DioHelper {
       if (withAuth && hasToken) 'Authorization': 'Bearer $tokenValue',
     };
   }
-
   static Future<Response> getData({
     required String url,
     Map<String, dynamic>? query,
@@ -51,21 +51,48 @@ class DioHelper {
   }) async {
     await headers(withAuth: withAuth);
 
-    final token = getIt<AuthStorage>().token;
-    final userId = getIt<AuthStorage>().userId;
-    final tokenValue = token?.trim();
-    final hasToken = tokenValue != null && tokenValue.isNotEmpty;
-    final userIdValue = userId?.trim();
-    final hasUserId = userIdValue != null && userIdValue.isNotEmpty;
+    // TEMP (until login is implemented)
+    const token  = "42|TGwKIwXUPTEJlX4pGNjANDBWbsSZdgdPWZcVRbp4cabdd34e";
+    const userId = "2";
+
+    final hasToken  = token.isNotEmpty;
+    final hasUserId = userId.isNotEmpty;
 
     final fullQuery = {
-      if (appendAuthParams && hasToken && hasUserId) "access-token": tokenValue,
-      if (appendAuthParams && hasToken && hasUserId) "id": userIdValue,
+      if (appendAuthParams && hasToken && hasUserId) "access-token": token,
+      if (appendAuthParams && hasToken && hasUserId) "id": userId,
       if (query != null) ...query,
     };
 
-    return dio!.get(url, queryParameters: fullQuery.isEmpty ? null : fullQuery);
+    return dio!.get(
+      url,
+      queryParameters: fullQuery.isEmpty ? null : fullQuery,
+    );
   }
+
+  // static Future<Response> getData({
+  //   required String url,
+  //   Map<String, dynamic>? query,
+  //   bool appendAuthParams = false,
+  //   bool withAuth = false,
+  // }) async {
+  //   await headers(withAuth: withAuth);
+  //
+  //   final token = getIt<AuthStorage>().token;
+  //   final userId = getIt<AuthStorage>().userId;
+  //   final tokenValue = token?.trim();
+  //   final hasToken = tokenValue != null && tokenValue.isNotEmpty;
+  //   final userIdValue = userId?.trim();
+  //   final hasUserId = userIdValue != null && userIdValue.isNotEmpty;
+  //
+  //   final fullQuery = {
+  //     if (appendAuthParams && hasToken && hasUserId) "access-token": tokenValue,
+  //     if (appendAuthParams && hasToken && hasUserId) "id": userIdValue,
+  //     if (query != null) ...query,
+  //   };
+  //
+  //   return dio!.get(url, queryParameters: fullQuery.isEmpty ? null : fullQuery);
+  // }
 
   static Future<Response> postData({
     required String url,
@@ -185,3 +212,5 @@ class DioHelper {
     return dio!.post(url, data: formData);
   }
 }
+
+

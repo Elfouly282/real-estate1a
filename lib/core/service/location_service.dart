@@ -4,9 +4,21 @@ import 'package:injectable/injectable.dart';
 import 'package:dartz/dartz.dart';
 import '../errors/failure.dart';
 
+class UserLocation {
+  final String name;
+  final double latitude;
+  final double longitude;
+
+  const UserLocation({
+    required this.name,
+    required this.latitude,
+    required this.longitude,
+  });
+}
+
 @injectable
 class LocationService {
-  Future<Either<Failure, String>> getCurrentLocationName() async {
+  Future<Either<Failure, UserLocation>> getCurrentLocationName() async {
     try {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
@@ -33,13 +45,19 @@ class LocationService {
         position.longitude,
       );
 
-      if (placemarks.isEmpty) return right('Unknown Location');
+      String locationName = 'Unknown Location';
+      if (placemarks.isNotEmpty) {
+        final place   = placemarks.first;
+        final city    = place.locality ?? place.subAdministrativeArea ?? '';
+        final country = place.country ?? '';
+        locationName  = '$city, $country'.trim().replaceAll(RegExp(r'^,|,$'), '');
+      }
 
-      final place   = placemarks.first;
-      final city    = place.locality ?? place.subAdministrativeArea ?? '';
-      final country = place.country ?? '';
-
-      return right('$city, $country'.trim().replaceAll(RegExp(r'^,|,$'), ''));
+      return right(UserLocation(
+        name:      locationName,
+        latitude:  position.latitude,
+        longitude: position.longitude,
+      ));
     } catch (e) {
       return left(LocationFailure(e.toString()));
     }

@@ -17,11 +17,12 @@ class AppBarCubit extends Cubit<AppBarState> {
         locationStatus: LocationStatus.error,
       )),
           (locationName) => emit(state.copyWith(
-        location: locationName,
+        location: locationName.name,
         locationStatus: LocationStatus.loaded,
       )),
     );
   }
   void clearNotification() => emit(state.copyWith(hasNotification: false));
   void clearMessage() => emit(state.copyWith(hasMessage: false));
+
 }

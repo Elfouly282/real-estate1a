@@ -33,7 +33,7 @@ class _FavoritesView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              'Favorites',
+              'Your Favorites',
               style: getBoldStyle(fontSize: 18, color: AppColors.black),
             ),
          InkWell(onTap: () {

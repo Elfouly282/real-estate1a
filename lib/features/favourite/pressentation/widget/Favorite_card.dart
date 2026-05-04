@@ -19,7 +19,7 @@ class FavoriteCard extends StatelessWidget {
         ? p.firstImageUrl!
         : 'https://via.placeholder.com/300';
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin:  EdgeInsets.symmetric(vertical: 4.h),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
@@ -83,9 +83,16 @@ class FavoriteCard extends StatelessWidget {
                       style: getRegularStyle(color: Colors.grey, fontSize: 10),
                     ),
                     SizedBox(width: 8),
+                    Text("|",style: TextStyle(color: AppColors.grey),),
+
                     SizedBox(width: 4),
+                    CustomSvgImage(
+                      path: Assets.svg.navigation,
+                      width: 12.w,
+                      height: 14.h,
+                    ),
                     Text(
-                      p.formattedDistance,
+                     "${p.distanceKm?? '0'} km",
                       style: TextStyle(color: Colors.grey),
                     ),
                   ],
@@ -97,16 +104,32 @@ class FavoriteCard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _Feature(
-                      icon: Icons.bed_outlined,
-                      text: "${p.bedrooms.toString()} BedRooms",
+                      icon: Icons.living_outlined, text: "${p.bedrooms.toString()} Bedrooms",
                     ),
                     _Feature(
                       icon: Icons.bathtub_outlined,
-                      text: p.bathrooms.toString(),
+                      text:"${p.bathrooms.toString()} Bathrooms",
                     ),
                     _Feature(
                       icon: Icons.kitchen_outlined,
-                      text: p.kitchens.toString(),
+                      text: "${p.kitchens.toString()} Kitchens",
+                    ),
+                  ],
+                ),
+                 SizedBox(height: 6.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _Feature(
+                      icon: Icons.bed_outlined, text: "${p.bedrooms.toString()} Bedrooms",
+                    ),
+                    _Feature(
+                      icon: Icons.bathtub_outlined,
+                      text:"${p.bathrooms.toString()} Bathrooms",
+                    ),
+                    _Feature(
+                      icon: Icons.kitchen_outlined,
+                      text: "${p.kitchens.toString()} Kitchens",
                     ),
                   ],
                 ),
@@ -152,7 +175,7 @@ class _Feature extends StatelessWidget {
       children: [
         Icon(icon, size: 16, color: Colors.grey),
         const SizedBox(width: 4),
-        Text(text, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(text, style: const TextStyle(fontSize: 10, color: Colors.grey)),
       ],
     );
   }

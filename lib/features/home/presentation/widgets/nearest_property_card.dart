@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
 import 'package:real_estate_1a/features/home/domain/entities/home_response_entity.dart';
@@ -7,6 +8,7 @@ import 'package:real_estate_1a/features/home/presentation/widgets/property_badge
 import 'package:real_estate_1a/gen/assets.gen.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
+import '../../../favourite/pressentation/cubit/favorites_cubit.dart';
 import 'star_rating.dart';
 
 class NearestPropertyCard extends StatefulWidget {
@@ -100,11 +102,13 @@ class _NearestPropertyCardState extends State<NearestPropertyCard> {
               ),
             ),
             GestureDetector(
-              onTap: () => setState(() => _saved = !_saved),
+              onTap: () {
+                context.read<FavoritesCubit>().toggleFavorite(widget.property.id);
+              },
               child: Icon(
-                _saved ? Icons.star : Icons.star_border,
-                size: 20.sp,
-                color: _saved ? AppColors.yello : Colors.grey,
+                context.watch<FavoritesCubit>().isFavorite(widget.property.id)? Icons.star : Icons.star_border,
+                size: 24.sp,
+                color: context.watch<FavoritesCubit>().isFavorite(widget.property.id)? Colors.amberAccent : Colors.grey,
               ),
             ),
           ],

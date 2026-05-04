@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
+import 'package:real_estate_1a/features/favourite/pressentation/cubit/favorites_cubit.dart';
 import 'package:real_estate_1a/features/home/domain/entities/home_response_entity.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/property_badge.dart';
 import 'package:real_estate_1a/gen/assets.gen.dart';
@@ -19,12 +22,12 @@ class BestOfferCard extends StatefulWidget {
 }
 
 class _BestOfferCardState extends State<BestOfferCard> {
-  bool _saved = false;
 
   @override
   Widget build(BuildContext context) {
-    final p = widget.property;
+    late bool isFavorite = context.watch<FavoritesCubit>().isFavorite(widget.property.id);
 
+    final p = widget.property;
     return Container(
       width: 227.w,
       decoration: BoxDecoration(
@@ -32,7 +35,7 @@ class _BestOfferCardState extends State<BestOfferCard> {
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: AppColors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -78,7 +81,6 @@ class _BestOfferCardState extends State<BestOfferCard> {
             ),
           ),
         ),
-
         // Badge
         Positioned(
           top: 8.h,
@@ -95,7 +97,8 @@ class _BestOfferCardState extends State<BestOfferCard> {
   }
 
   Widget _buildInfo(PropertyEntity p) {
-    return Padding(
+    return Container(
+      color: AppColors.backgroundColor,
       padding: EdgeInsets.all(9.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,17 +111,18 @@ class _BestOfferCardState extends State<BestOfferCard> {
                 p.title.substring(0,20),
                 style: getMediumStyle(fontSize: 13, color: AppColors.black),
                 maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                overflow: TextOverflow.clip,
               ),
               // Favorite
 
-                GestureDetector(
-                  onTap: () => setState(() => _saved = !_saved),
-                  child: Icon(
-                    _saved ? Icons.star : Icons.star_border,
-                    size: 24.sp,
-                    color: _saved ? AppColors.yello : Colors.grey,
-
+              GestureDetector(
+                onTap: () {
+                  context.read<FavoritesCubit>().toggleFavorite(widget.property.id);
+                },
+                child: Icon(
+                  context.watch<FavoritesCubit>().isFavorite(widget.property.id)? Icons.star : Icons.star_border,
+                  size: 24.sp,
+                  color: context.watch<FavoritesCubit>().isFavorite(widget.property.id)? Colors.amberAccent : Colors.grey,
                 ),
               ),
             ],
@@ -148,11 +152,7 @@ class _BestOfferCardState extends State<BestOfferCard> {
               ),
               Text("|",style: TextStyle(color: AppColors.grey),),
               SizedBox(width: 12.w),
-
-
               CustomSvgImage(path: Assets.svg.navigation),
-
-
               Text(
                 "${p.distanceKm?? '0'} km",
                 style: getRegularStyle(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:real_estate_1a/core/constant/snakbar.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/appbar/app_bar_cubit.dart';
@@ -10,6 +11,7 @@ import 'package:real_estate_1a/features/home/presentation/widgets/best_offer_car
 import 'package:real_estate_1a/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/search_bar.dart';
 import '../../../../../core/di/di.dart';
+import '../../../../favourite/pressentation/cubit/favorites_cubit.dart';
 import '../../widgets/filter_chips_widget.dart';
 import '../../widgets/nearest_property_card.dart';
 
@@ -22,6 +24,8 @@ class HomeTab extends StatelessWidget {
       providers: [
         BlocProvider(create: (_) => getIt<AppBarCubit>()),
         BlocProvider(create: (_) => getIt<HomeCubit>()..getHomeData()),
+        BlocProvider(create: (_) => getIt<FavoritesCubit>()),
+
       ],
       child: const _HomeTabView(),
     );
@@ -33,21 +37,66 @@ class _HomeTabView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AppBarCubit, AppBarState>(
-      listenWhen: (prev, curr) =>
-      curr.locationStatus == LocationStatus.loaded &&
-          prev.locationStatus != LocationStatus.loaded,
-      listener: (context, appBarState) {
-        if (appBarState.latitude != null && appBarState.longitude != null) {
-          context.read<HomeCubit>().sortNearby(
-            userLat: appBarState.latitude!,
-            userLng: appBarState.longitude!,
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        // ───────────── Location Listener ─────────────
+        BlocListener<AppBarCubit, AppBarState>(
+          listenWhen: (prev, curr) =>
+          curr.locationStatus == LocationStatus.loaded &&
+              prev.locationStatus != LocationStatus.loaded,
+          listener: (context, appBarState) {
+            if (appBarState.latitude != null &&
+                appBarState.longitude != null) {
+              context.read<HomeCubit>().sortNearby(
+                userLat: appBarState.latitude!,
+                userLng: appBarState.longitude!,
+              );
+            }
+          },
+        ),
+
+        // ───────────── Favorites SnackBar Listener ─────────────
+        BlocListener<FavoritesCubit, FavoritesState>(
+          listener: (context, state) {
+              // ✅ FavoriteActionSuccess — added or removed
+              if (state is FavoriteActionSuccess ) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      state.isAdded
+                          ? 'Added to favorites ❤️'
+                          : 'Removed from favorites 💔',
+                    ),
+                    backgroundColor:
+                    state.isAdded ? Colors.green : Colors.red,
+                    duration: const Duration(seconds: 2),
+                  ),
+                );
+              }
+
+              // ✅ Error
+              if (state is FavoritesError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+              }
+
+            if (state is FavoriteActionFailed) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message),
+                  backgroundColor: Colors.orange,
+                ),
+              );
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
-        appBar: const HomeAppBar(),
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
@@ -67,6 +116,7 @@ class _HomeTabView extends StatelessWidget {
     );
   }
 }
+
 class _HomeContent extends StatelessWidget {
   const _HomeContent();
 
@@ -109,7 +159,9 @@ class _HomeContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // ── Best Offers ───────────────────────────────────────────────
-              _SectionHeader(title: 'Best Offers', onViewAll: () {}),
+              Container(
+                color: AppColors.backgroundColor,
+                  child: _SectionHeader(title: 'Best Offers', onViewAll: () {})),
               SizedBox(height: 12.h),
               SizedBox(
                 height: 260.h,
@@ -125,7 +177,9 @@ class _HomeContent extends StatelessWidget {
               SizedBox(height: 20.h),
 
               // ── Nearest You ───────────────────────────────────────────────
-              _SectionHeader(title: 'Nearest You', onViewAll: () {}),
+              Container(
+                  color: AppColors.backgroundColor,
+                  child: _SectionHeader(title: 'Nearest You', onViewAll: () {})),
               SizedBox(height: 12.h),
               state.data.recommended.isEmpty?Center(child: Text("No nearby properties found",style:TextStyle(color: AppColors.primaryColor),)):
               ListView.separated(

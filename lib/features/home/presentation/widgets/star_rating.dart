@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/app_colors.dart';
-
 class StarRating extends StatelessWidget {
   final double rating;
   const StarRating({super.key, required this.rating});

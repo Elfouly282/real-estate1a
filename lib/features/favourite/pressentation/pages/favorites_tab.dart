@@ -49,7 +49,7 @@ class _FavoritesView extends StatelessWidget {
         builder: (context, state) {
           // ── Loading ────────────────────────────────────────────────────────
           if (state is FavoritesLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: AppColors.primaryColor,));
           }
           // ── Error ──────────────────────────────────────────────────────────
           if (state is FavoritesError) {

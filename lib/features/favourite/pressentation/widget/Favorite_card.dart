@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
+import 'package:real_estate_1a/features/favourite/pressentation/cubit/favorites_cubit.dart';
 import 'package:real_estate_1a/features/home/domain/entities/home_response_entity.dart';
 
 import '../../../../gen/assets.gen.dart';
@@ -44,6 +46,7 @@ class FavoriteCard extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
               ),
+
             ],
           ),
           Padding(
@@ -61,8 +64,16 @@ class FavoriteCard extends StatelessWidget {
                      overflow: TextOverflow.clip,
                      style: getMediumStyle(fontSize: 16, color:Colors.black),
                       ),
-                      IconButton(onPressed: () {}, icon: Icon(Icons.star,color: Colors.amberAccent,)),
-                    ],
+                      GestureDetector(
+                        onTap: () {
+                          context.read<FavoritesCubit>().removeFromFavorite(p.id);
+                        },
+                        child: Icon(
+                           Icons.star ,
+                          size: 24.sp,
+                          color: Colors.amberAccent
+                        ),
+                      ),                    ],
                   ),
                 ),
 
@@ -133,7 +144,6 @@ class FavoriteCard extends StatelessWidget {
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 12),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

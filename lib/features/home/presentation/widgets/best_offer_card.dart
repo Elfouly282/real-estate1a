@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
@@ -25,8 +24,6 @@ class _BestOfferCardState extends State<BestOfferCard> {
 
   @override
   Widget build(BuildContext context) {
-    late bool isFavorite = context.watch<FavoritesCubit>().isFavorite(widget.property.id);
-
     final p = widget.property;
     return Container(
       width: 227.w,
@@ -51,12 +48,10 @@ class _BestOfferCardState extends State<BestOfferCard> {
       ),
     );
   }
-
   Widget _buildImage(PropertyEntity p) {
     final imageUrl = (p.firstImageUrl?.isNotEmpty ?? false)
         ? p.firstImageUrl!
         : 'https://via.placeholder.com/300';
-
     return Stack(
       children: [
         CachedNetworkImage(
@@ -90,8 +85,6 @@ class _BestOfferCardState extends State<BestOfferCard> {
             color: AppColors.black,
           ),
         ),
-
-
       ],
     );
   }
@@ -114,7 +107,6 @@ class _BestOfferCardState extends State<BestOfferCard> {
                 overflow: TextOverflow.clip,
               ),
               // Favorite
-
               GestureDetector(
                 onTap: () {
                   context.read<FavoritesCubit>().toggleFavorite(widget.property.id);
@@ -129,7 +121,6 @@ class _BestOfferCardState extends State<BestOfferCard> {
           ),
 
           SizedBox(height: 12.h),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -162,9 +153,7 @@ class _BestOfferCardState extends State<BestOfferCard> {
               ),
             ],
           ),
-
           SizedBox(height: 12.h),
-
           // Price + Rating
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

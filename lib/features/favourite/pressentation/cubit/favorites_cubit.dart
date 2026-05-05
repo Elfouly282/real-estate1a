@@ -38,7 +38,25 @@ class FavoritesCubit extends Cubit<FavoritesState> {
       },
     );
   }
+// remove favourite
+  Future<void> removeFromFavorite(int propertyId) async {
+    emit(FavoritesLoading());
 
+    final result = await removeFavoriteUseCase.invoke(propertyId);
+    result.fold(
+          (failure) => emit(FavoritesError(failure.message)),
+          (_) {
+        // remove from cached ids
+        _favoriteIds.remove(propertyId);
+        emit(FavoriteActionSuccess(
+          propertyId: propertyId,
+          isAdded: false, // ← removed
+        ));
+        // refresh list
+        getFavorites();
+      },
+    );
+  }
   // ── Toggle favorite ────────────────────────────────────────────────────────
 
   Future<void> toggleFavorite(int propertyId) async {

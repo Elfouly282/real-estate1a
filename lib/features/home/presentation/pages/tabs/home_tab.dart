@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/core/constant/snakbar.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
+import 'package:real_estate_1a/features/history/presentation/cubit/history_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/appbar/app_bar_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/home/home_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/home/home_state.dart';

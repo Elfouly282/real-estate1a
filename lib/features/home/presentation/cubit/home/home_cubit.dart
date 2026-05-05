@@ -120,10 +120,6 @@ class HomeCubit extends Cubit<HomeState> {
   double _degToRad(double deg) => deg * (pi / 180);
 
 
-
-  //search functions
-// في home_cubit.dart أضف
-
   String _searchQuery = '';
 
   void searchProperties(String query) {

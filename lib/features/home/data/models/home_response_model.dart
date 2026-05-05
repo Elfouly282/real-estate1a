@@ -132,6 +132,7 @@ class PropertyModel extends PropertyEntity {
     agent: AgentModel.fromJson(
         json['agent'] as Map<String, dynamic>),
   );
+
 }
 
 // ── Home Response Model ───────────────────────────────────────────────────────

@@ -3,7 +3,8 @@ class AppConstants {
   static const String RealEstatebaseUrl="https://real.newcinderella.online/";
   static const String homeEndPoint = 'api/v1/home';
   static const String getFavorite="api/v1/favorites";
-  static  String favoriteById(int id)=>"/api/v1/favorites/$id";
+  static  String favoriteById(int id)=>"api/v1/favorites/$id";
+  static const String historyEndPoint="api/v1/orders";
 
   ///REAL ESTATE END POINT
   //static const String KhamnyBaseUrl = 'https://washing-cars.storage-te.com';

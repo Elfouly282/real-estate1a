@@ -14,7 +14,7 @@ TextStyle _getTextStyle(
     fontWeight: fontWeight,
     height: height,
     decoration: decoration,
-    fontFamily: AppFonts.questFont,
+    fontFamily: AppFonts.poppinsFont,
   );
 }
 

@@ -2,6 +2,7 @@
 
 import 'package:dio/dio.dart';
 import 'package:dartz/dartz.dart';
+import 'package:injectable/injectable.dart';
 import '../../../../core/api/dio_helper.dart';
 import '../../../../core/constant/app_constants.dart';
 import '../../../../core/di.dart';
@@ -10,10 +11,12 @@ import '../../../../core/security/security_helper.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repos/auth_repo.dart';
 import '../models/user_model.dart';
-
+import 'package:injectable/injectable.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
+@LazySingleton(as: AuthRepo)
 class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl();
 

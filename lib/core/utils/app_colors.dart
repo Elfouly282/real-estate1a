@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const Color primaryColor = Color(0xFF1597A8);
-  static const Color babyBlue=Color(0XFFBFF8FF);
+  static const Color babyBlue = Color(0xFFBFF8FF);
 
   static const Color secondaryColor = Color(0xFF0F1942);
-  static const Color backgroundColor=Color(0XFFFAF9F6);
+  static const Color backgroundColor = Color(0xFFFAF9F6);
   static const Color blue = Color(0xFF00E6FF);
   static const Color blue2 = Color(0xFF0053BC);
   static const Color green = Color(0xFF008D36);
@@ -40,7 +40,7 @@ class AppColors {
   static const Color primaryShadowColor = Color(0x4DC67C4E);
 
   static const LinearGradient primaryGradient = LinearGradient(
-    colors: [primaryColor, Color(0xffFFFFFF)],
+    colors: [primaryColor, Color(0xFFFFFFFF)],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );

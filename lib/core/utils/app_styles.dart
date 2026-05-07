@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'app_fonts.dart';
 
 TextStyle _getTextStyle(
@@ -14,7 +15,7 @@ TextStyle _getTextStyle(
     fontWeight: fontWeight,
     height: height,
     decoration: decoration,
-    fontFamily: AppFonts.Poppins,
+    fontFamily: AppFonts.poppinsFont,
   );
 }
 
@@ -71,14 +72,21 @@ TextStyle getBoldStyle({
 }) {
   return _getTextStyle(fontSize, FontWeight.w700, color, height, decoration);
 }
+
 TextStyle getSemiBold({
   required double fontSize,
   required Color color,
   double? height,
   TextDecoration? decoration,
-  FontWeight? fontWeight
+  FontWeight? fontWeight,
 }) {
-  return _getTextStyle(fontSize, fontWeight!, color, height, decoration);
+  return _getTextStyle(
+    fontSize,
+    fontWeight ?? FontWeight.w600,
+    color,
+    height,
+    decoration,
+  );
 }
 
 TextDirection getTextDirectionFromText(String text) {

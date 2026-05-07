@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icon_snackbar/flutter_icon_snackbar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../utils/app_colors.dart';
 import '../utils/app_styles.dart';
 

@@ -140,10 +140,10 @@ class _CustomTextformfeildState extends State<CustomTextformfeild> {
           color: AppColors.textLightColor,
         ),
         filled: true,
-        fillColor: AppColors.lightGrayColor,
+        fillColor: Colors.white,
         contentPadding: EdgeInsetsDirectional.symmetric(
           horizontal: 12.w,
-          vertical: 14.h,
+          vertical: 10.h,
         ),
         errorStyle: getSmallStyle(
           fontSize: AppFonts.labelSmall,
@@ -153,11 +153,11 @@ class _CustomTextformfeildState extends State<CustomTextformfeild> {
         helperText: null,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
-          borderSide: BorderSide(color: AppColors.borderColor, width: 1),
+          borderSide: BorderSide(color: AppColors.lightGrayColor, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
-          borderSide: BorderSide(color: AppColors.borderColor, width: 1),
+          borderSide: BorderSide(color: AppColors.grey, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.borderRadius ?? 10.r),
@@ -177,7 +177,7 @@ class _CustomTextformfeildState extends State<CustomTextformfeild> {
                 icon: Icon(
                   _obscureText ? Icons.visibility_off : Icons.visibility,
                   color: AppColors.textSecondaryColor,
-                  size: 24.sp,
+                  size: 20.sp,
                 ),
                 onPressed: () {
                   setState(() {

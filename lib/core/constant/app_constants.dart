@@ -5,6 +5,9 @@ class AppConstants {
   static const String getFavorite="api/v1/favorites";
   static  String favoriteById(int id)=>"api/v1/favorites/$id";
   static const String historyEndPoint="api/v1/orders";
+  static const String getListConversation="api/v1/conversations";
+  static  String getMessageAndConversation(int conversationId)=>"api/v1/conversations/$conversationId";
+  static  String sendMessage(int conversationId)=>"api/v1/conversations/$conversationId/messages";
 
   ///REAL ESTATE END POINT
   //static const String KhamnyBaseUrl = 'https://washing-cars.storage-te.com';

@@ -16,8 +16,7 @@ class HomeRepositoryImpl implements HomeRepository {
   Future<Either<Failure, HomeResponseEntity>> getHomeData() =>
       remoteDataSource.getHomeData();
   @override
-  Future<Either<Failure, List<PropertyEntity>>> getNearbyProperties({required double latitude, required double longitude, double radiusInKm = 5}) {
-    // TODO: implement getNearbyProperties
-    throw UnimplementedError();
+  Future<Either<Failure, HomeResponseEntity>> getNearbyProperties({required double latitude, required double longitude, double radiusInKm = 5}) {
+    return remoteDataSource.getHomeData();
   }
 }

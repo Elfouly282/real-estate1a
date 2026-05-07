@@ -29,20 +29,24 @@ class ImageEntity {
     required this.sortOrder,
   });
 }
-
 // ── User Entity ───────────────────────────────────────────────────────────────
-
 class UserEntity {
   final int id;
   final String name;
   final String email;
   final String role;
+  dynamic location;
+  dynamic phone;
+  String? createdAt;
 
-  const UserEntity({
+   UserEntity({
     required this.id,
     required this.name,
     required this.email,
     required this.role,
+    required this.location,
+    required this.phone,
+    required this.createdAt,
   });
 }
 
@@ -81,11 +85,11 @@ class PropertyEntity {
   final int kitchens;
   final bool isFeatured;
   final int salesCount;
-  final double? rate;           // ← nullable (بعض الـ properties مفيهاش rate)
+  final double? rate;
   final double latitude;
   final double longitude;
   final String address;
-  final double? distanceKm;     // ← nullable (بيتحسب بالـ GPS)
+  final double? distanceKm;
   final CategoryEntity category;
   final List<ImageEntity> images;
   final AgentEntity agent;

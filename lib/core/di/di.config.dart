@@ -39,18 +39,30 @@ import 'package:real_estate_1a/features/history/domain/usecases/history_usecases
     as _i670;
 import 'package:real_estate_1a/features/history/presentation/cubit/history_cubit.dart'
     as _i754;
+import 'package:real_estate_1a/features/home/data/datasources/chat_datasource_impl.dart'
+    as _i565;
 import 'package:real_estate_1a/features/home/data/datasources/home_datasource_impl.dart'
     as _i207;
+import 'package:real_estate_1a/features/home/data/repositories/chat_repository_impl.dart'
+    as _i461;
 import 'package:real_estate_1a/features/home/data/repositories/home_repository_impl.dart'
     as _i617;
+import 'package:real_estate_1a/features/home/domain/repositories/datasource/chat_datasource.dart'
+    as _i428;
 import 'package:real_estate_1a/features/home/domain/repositories/datasource/home_datasource.dart'
     as _i992;
+import 'package:real_estate_1a/features/home/domain/repositories/repositories/chat_repository.dart'
+    as _i335;
 import 'package:real_estate_1a/features/home/domain/repositories/repositories/home_repository.dart'
     as _i65;
+import 'package:real_estate_1a/features/home/domain/usecases/chat_usecase.dart'
+    as _i509;
 import 'package:real_estate_1a/features/home/domain/usecases/home_usecase.dart'
     as _i954;
 import 'package:real_estate_1a/features/home/presentation/cubit/appbar/app_bar_cubit.dart'
     as _i365;
+import 'package:real_estate_1a/features/home/presentation/cubit/chat/chat_cubit.dart'
+    as _i66;
 import 'package:real_estate_1a/features/home/presentation/cubit/home/home_cubit.dart'
     as _i979;
 
@@ -64,6 +76,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i677.LocationService>(() => _i677.LocationService());
     gh.singleton<_i839.DioHelper>(() => _i839.DioHelper());
     gh.lazySingleton<_i779.ApiManager>(() => _i779.ApiManager(gh<_i361.Dio>()));
+    gh.factory<_i428.ChatDatasource>(
+      () => _i565.ChatDatasourceImpl(apiManager: gh<_i779.ApiManager>()),
+    );
     gh.factory<_i365.AppBarCubit>(
       () => _i365.AppBarCubit(locationService: gh<_i677.LocationService>()),
     );
@@ -76,14 +91,43 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i992.HomeDatasource>(
       () => _i207.HomeRemoteDataSourceImpl(gh<_i779.ApiManager>()),
     );
+    gh.factory<_i335.ChatRepository>(
+      () => _i461.ChatRepositoryImpl(datasource: gh<_i428.ChatDatasource>()),
+    );
     gh.factory<_i632.HistoryRepository>(
       () => _i1063.HistoryRepositoryImpl(gh<_i896.HistoryDatasource>()),
+    );
+    gh.factory<_i509.ListConversationUsecase>(
+      () =>
+          _i509.ListConversationUsecase(repository: gh<_i335.ChatRepository>()),
+    );
+    gh.factory<_i509.GetConversationAndMessageUseCase>(
+      () => _i509.GetConversationAndMessageUseCase(
+        repository: gh<_i335.ChatRepository>(),
+      ),
+    );
+    gh.factory<_i509.SendMessageUseCase>(
+      () => _i509.SendMessageUseCase(repository: gh<_i335.ChatRepository>()),
+    );
+    gh.factory<_i509.StartConversationUseCase>(
+      () => _i509.StartConversationUseCase(
+        repository: gh<_i335.ChatRepository>(),
+      ),
     );
     gh.factory<_i65.HomeRepository>(
       () => _i617.HomeRepositoryImpl(gh<_i992.HomeDatasource>()),
     );
     gh.factory<_i570.FavoritesRepository>(
       () => _i471.FavoritesRepositoryImpl(gh<_i812.FavoritesDatasource>()),
+    );
+    gh.factory<_i66.ChatCubit>(
+      () => _i66.ChatCubit(
+        listConversationUsecase: gh<_i509.ListConversationUsecase>(),
+        getConversationAndMessageUseCase:
+            gh<_i509.GetConversationAndMessageUseCase>(),
+        sendMessageUseCase: gh<_i509.SendMessageUseCase>(),
+        startConversationUseCase: gh<_i509.StartConversationUseCase>(),
+      ),
     );
     gh.factory<_i670.GetHistoryUseCase>(
       () => _i670.GetHistoryUseCase(gh<_i632.HistoryRepository>()),

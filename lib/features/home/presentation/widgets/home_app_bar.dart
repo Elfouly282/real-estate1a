@@ -4,8 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
+import 'package:real_estate_1a/features/home/presentation/pages/conversation_screen.dart';
 import '../../../../gen/assets.gen.dart';
 import '../cubit/appbar/app_bar_cubit.dart';
+import '../pages/chat_screen.dart';
 
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -21,10 +23,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
   @override
   void initState() {
     super.initState();
-    // ✅ هنا بتتنادى fetchLocation
     context.read<AppBarCubit>().fetchLocation();
   }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppBarCubit, AppBarState>(
@@ -78,8 +78,8 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ),
           actions: [
             IconButton(
-              onPressed: () =>
-                  context.read<AppBarCubit>().clearNotification(),
+              onPressed: () {
+             return     context.read<AppBarCubit>().clearNotification();},
               icon: CustomSvgImage(
                 path: state.hasNotification
                     ? Assets.svg.activeNotification
@@ -87,8 +87,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
               ),
             ),
             IconButton(
-              onPressed: () =>
-                  context.read<AppBarCubit>().clearMessage(),
+              onPressed: () {
+                Navigator.of(context)
+                    .pushNamed(
+                    ConversationsScreen.routeName);
+                  context.read<AppBarCubit>().clearMessage();},
               icon: CustomSvgImage(
                 path: state.hasMessage
                     ? Assets.svg.activeMessage

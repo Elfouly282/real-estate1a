@@ -4,11 +4,13 @@ import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/features/favourite/pressentation/pages/favorites_tab.dart';
 import 'package:real_estate_1a/features/history/presentation/pages/history_tab.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/appbar/app_bar_cubit.dart';
+import 'package:real_estate_1a/features/home/presentation/cubit/chat/chat_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/pages/tabs/home_tab.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/bottom_nav_bar.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/home_app_bar.dart';
 import '../../../../../core/di/di.dart';
 class HomeScreen extends StatefulWidget {
+  static String routeName="/HomeScreen";
   const HomeScreen({super.key});
 
   @override
@@ -25,8 +27,16 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => getIt<AppBarCubit>(),
+  return MultiBlocProvider(
+
+      providers: [
+
+        BlocProvider<AppBarCubit>(
+          create: (_) => getIt<AppBarCubit>(),
+        ),
+
+
+      ],
       child: Scaffold(
         backgroundColor: AppColors.backgroundColor,
         appBar: _currentIndex == 2 ? null : const HomeAppBar() ,

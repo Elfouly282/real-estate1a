@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/features/auth/presentation/screens/register_screen.dart';
+import 'package:real_estate_1a/features/home/presentation/pages/home_screen.dart';
 
 import '../../../../core/constant/custom_button.dart';
 import '../../../../core/constant/custom_textformfield.dart';
@@ -65,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
         },
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: AppColors.secondaryColor,
+            backgroundColor: AppColors.backgroundColor,
             body: SafeArea(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),
@@ -174,6 +175,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               password:
                               _passwordController.text.trim(),
                             );
+                            Navigator.restorablePushReplacementNamed(context, HomeScreen.routeName);
                           }
                         },
                       ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_fonts.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../gen/assets.gen.dart';
+import '../../../favourite/pressentation/cubit/favorites_cubit.dart';
 import '../../domain/entities/property_details_entity.dart';
 
 class SimilarPropertyCardWidget extends StatefulWidget {
@@ -139,6 +141,8 @@ class _SimilarPropertyCardWidgetState extends State<SimilarPropertyCardWidget> {
         GestureDetector(
             onTap: () {
               setState(() => isFavourite = !isFavourite);
+              context.read<FavoritesCubit>().toggleFavorite(widget.property.id);
+
               //  context.read<FavoritesCubit>().toggleFavorite(widget.property.id);
             },
           child: Icon(
@@ -160,7 +164,7 @@ class _SimilarPropertyCardWidgetState extends State<SimilarPropertyCardWidget> {
           child: Row(
             children: [
               Text(
-                widget.property.address,
+                widget.property.address.substring(0,20),
                 style: getLightStyle(
                   fontSize: AppFonts.labelSmall,
                   color: AppColors.textSecondaryColor,

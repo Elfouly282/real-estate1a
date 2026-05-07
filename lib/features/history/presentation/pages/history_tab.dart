@@ -80,23 +80,19 @@ class _HistoryView extends StatelessWidget {
               ),
             );
           }
-
           // ── Empty ──────────────────────────────────────────────────────────
           if (state is HistorySuccess && state.data.orders.isEmpty) {
             return Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.star_border,
+                  Icon(Icons.history,
                       size: 64, color: Colors.grey[300]),
                   SizedBox(height: 16.h),
-                  Text('No favorites yet',
+                  Text('No History yet',
                       style: getMediumStyle(
                           fontSize: 16, color: Colors.grey)),
                   SizedBox(height: 8.h),
-                  Text('Save properties you like to see them here',
-                      style: getRegularStyle(
-                          fontSize: 13, color: Colors.grey)),
                 ],
               ),
             );

@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
+import '../di/di.dart';
 import '../funcations/app_functions.dart';
+import '../security/security_helper.dart';
 
 @lazySingleton
 class ApiManager {
@@ -9,12 +11,8 @@ class ApiManager {
 
   ApiManager(this.dio);
 
-  // 🔥 ثابتين للتاسك
-  static const String _token =
-      "22|JuLRPDRUlkQofNBevWxQtXrWs3jr60X5AL9LQlpA551b2fa9";
-
-  static const String _userId =
-      "13";
+  final token = getIt<AuthStorage>().token ?? '';
+  final userId = getIt<AuthStorage>().userId ?? '';
 
   Future<void> _setHeaders() async {
     final lang = AppFunctions.getLanguageCode();
@@ -24,9 +22,8 @@ class ApiManager {
       'Content-Type': 'application/json',
       'locale': lang,
 
-      // 🔥 ثابتين
-      'Authorization': 'Bearer $_token',
-      'userId': _userId,
+      'Authorization': 'Bearer $token',
+      'userId': userId,
     };
   }
 

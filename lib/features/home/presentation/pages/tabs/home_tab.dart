@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:real_estate_1a/core/constant/snakbar.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
-import 'package:real_estate_1a/features/history/presentation/cubit/history_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/appbar/app_bar_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/home/home_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/home/home_state.dart';
+import 'package:real_estate_1a/features/home/presentation/pages/viewall_screen.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/best_offer_card.dart';
-import 'package:real_estate_1a/features/home/presentation/widgets/home_app_bar.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/search_bar.dart';
+import 'package:real_estate_1a/features/property_details/presentation/screens/property_details_screen.dart';
 import '../../../../../core/di/di.dart';
 import '../../../../favourite/pressentation/cubit/favorites_cubit.dart';
 import '../../widgets/filter_chips_widget.dart';
@@ -26,7 +25,6 @@ class HomeTab extends StatelessWidget {
         BlocProvider(create: (_) => getIt<AppBarCubit>()),
         BlocProvider(create: (_) => getIt<HomeCubit>()..getHomeData()),
         BlocProvider(create: (_) => getIt<FavoritesCubit>()),
-
       ],
       child: const _HomeTabView(),
     );
@@ -162,17 +160,44 @@ class _HomeContent extends StatelessWidget {
               // ── Best Offers ───────────────────────────────────────────────
               Container(
                 color: AppColors.backgroundColor,
-                  child: _SectionHeader(title: 'Best Offers', onViewAll: () {})),
+                  child:_SectionHeader(
+                    title: 'Best Offers',
+                    onViewAll: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ViewAllPropertiesScreen(
+                            title: 'Best Offers',
+                            properties: state.data.bestSelling,
+                          ),
+                        ),
+                      );
+                    },
+                  ),),
               SizedBox(height: 12.h),
               SizedBox(
-                height: 260.h,
+                height: 270.h,
                 child:  state.data.bestSelling.isEmpty?Center(child: Text("No properties found",style:TextStyle(color: AppColors.primaryColor),)):
                 ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: state.data.bestSelling.length,
                   separatorBuilder: (_, __) => SizedBox(width: 12.w),
                   itemBuilder: (_, i) =>
-                      InkWell(child: BestOfferCard(property: state.data.bestSelling[i]),onTap: (){},),
+                      InkWell(
+                        child: BestOfferCard(
+                          property: state.data.bestSelling[i],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PropertyDetailsScreen(
+                                propertyId: state.data.bestSelling[i].id,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
                 ),
               ),
               SizedBox(height: 20.h),
@@ -180,7 +205,18 @@ class _HomeContent extends StatelessWidget {
               // ── Nearest You ───────────────────────────────────────────────
               Container(
                   color: AppColors.backgroundColor,
-                  child: _SectionHeader(title: 'Nearest You', onViewAll: () {})),
+                  child: _SectionHeader(title: 'Nearest You', onViewAll: () {
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ViewAllPropertiesScreen(
+                          title: 'Nearest You',
+                          properties: state.data.recommended,
+                        ),
+                      ),
+                    );
+                  })),
               SizedBox(height: 12.h),
               state.data.recommended.isEmpty?Center(child: Text("No nearby properties found",style:TextStyle(color: AppColors.primaryColor),)):
               ListView.separated(
@@ -189,7 +225,16 @@ class _HomeContent extends StatelessWidget {
                 itemCount: state.data.recommended.length,
                 separatorBuilder: (_, __) => SizedBox(height: 12.h),
                 itemBuilder: (_, i) =>
-                 InkWell(child: NearestPropertyCard(property:state.data.recommended[i]),onTap: (){},),
+                 InkWell(child: NearestPropertyCard(property:state.data.recommended[i]),onTap: (){
+                   Navigator.push(
+                     context,
+                     MaterialPageRoute(
+                       builder: (_) => PropertyDetailsScreen(
+                         propertyId: state.data.recommended[i].id,
+                       ),
+                     ),
+                   );
+                 },),
               ),
             ],
           );

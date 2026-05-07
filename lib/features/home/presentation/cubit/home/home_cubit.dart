@@ -41,13 +41,11 @@ class HomeCubit extends Cubit<HomeState> {
     final current = state;
     if (current is! HomeSuccess) return;
 
-    // index 0 = 'All' → باقي الـ indexes = categories
     final isAll = index == 0;
 
-    // جيب اسم الـ category المختارة
     final selectedCategory = isAll
         ? null
-        : current.data.categories[index - 1].name; // ← -1 عشان 'All' في index 0
+        : current.data.categories[index - 1].name;
 
     final filteredBestSelling = isAll
         ? _allBestSelling

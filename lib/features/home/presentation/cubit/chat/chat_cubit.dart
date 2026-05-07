@@ -2,9 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:real_estate_1a/features/home/domain/entities/chat_entity.dart';
 import 'package:real_estate_1a/features/home/domain/usecases/chat_usecase.dart';
-
 part 'chat_state.dart';
-
 @injectable
 class ChatCubit extends Cubit<ChatState> {
   final ListConversationUsecase listConversationUsecase;
@@ -19,20 +17,12 @@ class ChatCubit extends Cubit<ChatState> {
     required this.startConversationUseCase,
   }) : super(ChatInitial());
 
-  // ─────────────────────────────
-  // STATE
-  // ─────────────────────────────
-
   List<ConversationEntity> conversations = [];
   List<MessagesEntity> messages = [];
 
   ConversationEntity? currentConversation;
 
   int? currentConversationId;
-
-  // ─────────────────────────────
-  // GET CONVERSATIONS
-  // ─────────────────────────────
 
   Future<void> getConversations() async {
     emit(ConversationsLoading());
@@ -42,13 +32,11 @@ class ChatCubit extends Cubit<ChatState> {
     result.fold(
       (failure) => emit(ConversationsError(failure.message)),
       (data) {
+        conversations = data;
         emit(ConversationsSuccess(data)); // data = List<ConversationEntity>
       },
     );
   }
-  // ─────────────────────────────
-  // GET MESSAGES
-  // ─────────────────────────────
 
   Future<void> getConversationAndMessages(int conversationId) async {
     currentConversationId = conversationId;
@@ -67,11 +55,6 @@ class ChatCubit extends Cubit<ChatState> {
       },
     );
   }
-
-  // ─────────────────────────────
-  // SEND MESSAGE
-  // ─────────────────────────────
-
   Future<void> sendMessage({
     required int conversationId,
     required String message,
@@ -92,10 +75,6 @@ class ChatCubit extends Cubit<ChatState> {
       },
     );
   }
-
-  // ─────────────────────────────
-  // START CONVERSATION
-  // ─────────────────────────────
 
   Future<void> startConversation({
     required int agentUserId,
@@ -123,10 +102,6 @@ class ChatCubit extends Cubit<ChatState> {
       },
     );
   }
-
-  // ─────────────────────────────
-  // UI HELPER
-  // ─────────────────────────────
 
   List<MessagesEntity> get uiMessages => messages;
 }

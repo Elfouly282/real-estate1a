@@ -5,16 +5,14 @@ import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
 import 'package:real_estate_1a/features/home/presentation/pages/conversation_screen.dart';
+
 import '../../../../gen/assets.gen.dart';
 import '../cubit/appbar/app_bar_cubit.dart';
-import '../pages/chat_screen.dart';
-
 class HomeAppBar extends StatefulWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
 
   @override
   State<HomeAppBar> createState() => _HomeAppBarState();
-
   @override
   Size get preferredSize => Size.fromHeight(80.h);
 }
@@ -25,6 +23,7 @@ class _HomeAppBarState extends State<HomeAppBar> {
     super.initState();
     context.read<AppBarCubit>().fetchLocation();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AppBarCubit, AppBarState>(
@@ -32,54 +31,65 @@ class _HomeAppBarState extends State<HomeAppBar> {
         return AppBar(
           toolbarHeight: 80.h,
           backgroundColor: AppColors.backgroundColor,
-          title: Row(
-            children: [
-              CustomSvgImage(
-                path: Assets.svg.location,
-                width: 32.w,
-                height: 32.h,
-              ),
-              SizedBox(width: 8.w),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Location",
-                      style: getRegularStyle(
-                        fontSize: 14,
-                        color: AppColors.grey2,
-                      ),
-                    ),
-                    if (state.locationStatus == LocationStatus.loading)
-                      SizedBox(
-                        width: 14.w,
-                        height: 14.h,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.black,
-                        ),
-                      )
-                    else
+          title: InkWell(
+
+            onTap: () async {
+              await context.read<AppBarCubit>().fetchLocation();
+            },
+            child: Row(
+              children: [
+                CustomSvgImage(
+                  path: Assets.svg.location,
+                  width: 32.w,
+                  height: 32.h,
+                ),
+                SizedBox(width: 8.w),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        state.location.isEmpty
-                            ? 'Locating...'
-                            : state.location,
+                        "Location",
                         style: getRegularStyle(
                           fontSize: 14,
-                          color: AppColors.black,
+                          color: AppColors.grey2,
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
-                  ],
+                      if (state.locationStatus == LocationStatus.loading)
+                        SizedBox(
+                          width: 14.w,
+                          height: 14.h,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.black,
+                          ),
+                        )
+                      else
+                        Text(
+                          state.locationStatus == LocationStatus.error
+                              ? 'Tap to give location permission'
+                              : state.location.isEmpty
+                                  ? 'Locating...'
+                                  : state.location,
+                          style: getRegularStyle(
+                            fontSize: 14,
+                            color: state.locationStatus == LocationStatus.error
+                                ? AppColors.primaryColor
+                                : AppColors.black,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           actions: [
             IconButton(
               onPressed: () {
-             return     context.read<AppBarCubit>().clearNotification();},
+                context.read<AppBarCubit>().clearNotification();
+              },
               icon: CustomSvgImage(
                 path: state.hasNotification
                     ? Assets.svg.activeNotification
@@ -87,11 +97,12 @@ class _HomeAppBarState extends State<HomeAppBar> {
               ),
             ),
             IconButton(
-              onPressed: () {
-                Navigator.of(context)
-                    .pushNamed(
-                    ConversationsScreen.routeName);
-                  context.read<AppBarCubit>().clearMessage();},
+              onPressed: () async {
+                context.read<AppBarCubit>().clearMessage();
+                await Navigator.of(context).pushNamed(
+                  ConversationsScreen.routeName,
+                );
+              },
               icon: CustomSvgImage(
                 path: state.hasMessage
                     ? Assets.svg.activeMessage

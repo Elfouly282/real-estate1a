@@ -5,7 +5,9 @@ import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/chat/chat_cubit.dart';
 
 class ChatScreen extends StatefulWidget {
-  static String routeName="/chatScreen";
+  static const String routeName = "/chatScreen";
+  static const String currentUserId = '13';
+
   final int conversationId;
 
   const ChatScreen({
@@ -50,6 +52,46 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  Widget _buildBody(ChatState state) {
+    if (state is ConversationLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state is ConversationError) {
+      return Center(child: Text(state.message));
+    }
+
+    if (state is SendMessageError) {
+      return Center(child: Text(state.message));
+    }
+
+    return Chat(
+      chatController: _chatController,
+      currentUserId: ChatScreen.currentUserId,
+      onMessageSend: (text) async {
+        final tempMessage = TextMessage(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          authorId: ChatScreen.currentUserId,
+          createdAt: DateTime.now().toUtc(),
+          text: text,
+        );
+
+        _chatController.insertMessage(tempMessage);
+
+        await context.read<ChatCubit>().sendMessage(
+          conversationId: widget.conversationId,
+          message: text,
+        );
+      },
+      resolveUser: (UserID id) async {
+        return User(
+          id: id,
+          name: id == ChatScreen.currentUserId ? 'Me' : 'Agent',
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ChatCubit, ChatState>(
@@ -61,36 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(title: const Text('Chat')),
-
-          body: state is ConversationLoading
-              ? const Center(child: CircularProgressIndicator())
-              : Chat(
-            chatController: _chatController,
-            currentUserId: '13',
-
-            onMessageSend: (text) async {
-              final tempMessage = TextMessage(
-                id: DateTime.now().millisecondsSinceEpoch.toString(),
-                authorId: '1',
-                createdAt: DateTime.now().toUtc(),
-                text: text,
-              );
-
-              _chatController.insertMessage(tempMessage);
-
-              await context.read<ChatCubit>().sendMessage(
-                conversationId: widget.conversationId,
-                message: text,
-              );
-            },
-
-            resolveUser: (UserID id) async {
-              return User(
-                id: id,
-                name: id == '13' ? 'Me' : 'Agent',
-              );
-            },
-          ),
+          body: _buildBody(state),
         );
       },
     );

@@ -27,6 +27,7 @@ class _BestOfferCardState extends State<BestOfferCard> {
     final p = widget.property;
     return Container(
       width: 227.w,
+      height: 259.h,
       decoration: BoxDecoration(
         color: AppColors.backgroundColor,
         borderRadius: BorderRadius.circular(16.r),

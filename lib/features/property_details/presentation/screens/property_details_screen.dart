@@ -20,6 +20,7 @@ import '../widgets/user_reviews_section_widget.dart';
 
 
 class PropertyDetailsScreen extends StatelessWidget {
+  static String routeName="propertyDetails";
   final int propertyId;
 
   const PropertyDetailsScreen({
@@ -41,7 +42,7 @@ class PropertyDetailsScreen extends StatelessWidget {
         ),
       ],
       child: Scaffold(
-        backgroundColor: AppColors.secondaryColor,
+        backgroundColor: AppColors.backgroundColor,
         bottomNavigationBar: BlocBuilder<DetailsCubit, DetailsState>(
           builder: (context, state) {
             if (state is DetailsSuccess) {

@@ -31,7 +31,6 @@ Future<void> configureDependencies() async {
   getIt.registerLazySingleton<Dio>(() => Dio());
 
   await DioHelper.init();
-  getIt.registerLazySingleton<DioHelper>(() => DioHelper());
 
   getIt.registerLazySingleton<InternetConnectionChecker>(
     () => InternetConnectionChecker.createInstance(),

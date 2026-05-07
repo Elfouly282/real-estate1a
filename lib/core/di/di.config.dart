@@ -15,6 +15,12 @@ import 'package:injectable/injectable.dart' as _i526;
 import 'package:real_estate_1a/core/api/api_manager.dart' as _i779;
 import 'package:real_estate_1a/core/api/dio_helper.dart' as _i839;
 import 'package:real_estate_1a/core/service/location_service.dart' as _i677;
+import 'package:real_estate_1a/features/auth/data/repositories/auth_repo_impl.dart'
+    as _i921;
+import 'package:real_estate_1a/features/auth/domain/repos/auth_repo.dart'
+    as _i941;
+import 'package:real_estate_1a/features/auth/presentation/cubit/auth_cubit.dart'
+    as _i785;
 import 'package:real_estate_1a/features/favourite/data/datasource/favorites_datasource_impl.dart'
     as _i514;
 import 'package:real_estate_1a/features/favourite/data/repositories/favorites_repository_impl.dart'
@@ -65,6 +71,24 @@ import 'package:real_estate_1a/features/home/presentation/cubit/chat/chat_cubit.
     as _i66;
 import 'package:real_estate_1a/features/home/presentation/cubit/home/home_cubit.dart'
     as _i979;
+import 'package:real_estate_1a/features/property_details/data/repositories/property_details_repo_impl.dart'
+    as _i218;
+import 'package:real_estate_1a/features/property_details/data/repositories/reviews_repo_impl.dart'
+    as _i864;
+import 'package:real_estate_1a/features/property_details/data/repositories/similar_properties_repo_impl.dart'
+    as _i1044;
+import 'package:real_estate_1a/features/property_details/domain/repos/property_details_repo.dart'
+    as _i366;
+import 'package:real_estate_1a/features/property_details/domain/repos/reviews_repo.dart'
+    as _i56;
+import 'package:real_estate_1a/features/property_details/domain/repos/similar_properties_repo.dart'
+    as _i596;
+import 'package:real_estate_1a/features/property_details/presentation/cubit/property_details_cubit.dart'
+    as _i756;
+import 'package:real_estate_1a/features/property_details/presentation/cubit/reviews_cubit.dart'
+    as _i472;
+import 'package:real_estate_1a/features/property_details/presentation/cubit/similar_properties_cubit.dart'
+    as _i653;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -75,9 +99,28 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i677.LocationService>(() => _i677.LocationService());
     gh.singleton<_i839.DioHelper>(() => _i839.DioHelper());
+    gh.lazySingleton<_i596.SimilarPropertiesRepo>(
+      () => _i1044.SimilarPropertiesRepoImpl(),
+    );
+    gh.lazySingleton<_i366.DetailsRepo>(() => _i218.DetailsRepoImpl());
     gh.lazySingleton<_i779.ApiManager>(() => _i779.ApiManager(gh<_i361.Dio>()));
+    gh.factory<_i653.SimilarPropertiesCubit>(
+      () =>
+          _i653.SimilarPropertiesCubit(repo: gh<_i596.SimilarPropertiesRepo>()),
+    );
+    gh.lazySingleton<_i56.ReviewsRepo>(() => _i864.ReviewsRepoImpl());
+    gh.lazySingleton<_i941.AuthRepo>(() => _i921.AuthRepoImpl());
     gh.factory<_i428.ChatDatasource>(
       () => _i565.ChatDatasourceImpl(apiManager: gh<_i779.ApiManager>()),
+    );
+    gh.factory<_i785.AuthCubit>(
+      () => _i785.AuthCubit(repo: gh<_i941.AuthRepo>()),
+    );
+    gh.factory<_i472.ReviewsCubit>(
+      () => _i472.ReviewsCubit(repo: gh<_i56.ReviewsRepo>()),
+    );
+    gh.factory<_i756.DetailsCubit>(
+      () => _i756.DetailsCubit(repo: gh<_i366.DetailsRepo>()),
     );
     gh.factory<_i365.AppBarCubit>(
       () => _i365.AppBarCubit(locationService: gh<_i677.LocationService>()),

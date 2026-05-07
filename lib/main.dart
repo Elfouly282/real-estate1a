@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:real_estate_1a/features/favourite/pressentation/cubit/favorites_cubit.dart';
+import 'package:real_estate_1a/features/property_details/presentation/screens/property_details_screen.dart';
 
 import 'core/bloc observe/bloc_service.dart';
 import 'core/di/di.dart';
@@ -15,17 +17,13 @@ import 'splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   Bloc.observer = MyBlocObserver();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await configureDependencies();
-
   runApp(const MyApp());
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -39,6 +37,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<ChatCubit>(
           create: (_) => getIt<ChatCubit>(),
         ),
+        BlocProvider<FavoritesCubit>(create: (_)=>getIt<FavoritesCubit>())
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
@@ -49,14 +48,29 @@ class MyApp extends StatelessWidget {
           home: const SplashScreen(),
           routes: {
             HomeScreen.routeName: (context) => const HomeScreen(),
-            ConversationsScreen.routeName: (context) =>
-                const ConversationsScreen(),
+            ConversationsScreen.routeName: (context) {
+              final args = ModalRoute.of(context)?.settings.arguments;
+
+              if (args is Map) {
+                return ConversationsScreen(
+                  agentUserId: (args['agentUserId'] as num?)?.toInt(),
+                  propertyId: (args['propertyId'] as num?)?.toInt(),
+                );
+              }
+
+              return const ConversationsScreen();
+            },
             ChatScreen.routeName: (context) {
               final conversationId =
                   ModalRoute.of(context)!.settings.arguments as int;
 
               return ChatScreen(conversationId: conversationId);
             },
+            PropertyDetailsScreen.routeName:(context){
+              final propertyId = ModalRoute.of(context)!.settings.arguments as int;
+
+              return PropertyDetailsScreen(propertyId: propertyId);
+            }
           },
         ),
       ),

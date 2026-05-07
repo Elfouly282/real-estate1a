@@ -52,7 +52,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         },
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: AppColors.secondaryColor,
+            backgroundColor: AppColors.backgroundColor,
             body: SafeArea(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 24.w),

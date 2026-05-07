@@ -4,9 +4,12 @@ import 'package:flutter_chat_core/flutter_chat_core.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/chat/chat_cubit.dart';
 
+import '../../../../core/di/di.dart';
+import '../../../../core/security/security_helper.dart';
+
 class ChatScreen extends StatefulWidget {
   static const String routeName = "/chatScreen";
-  static const String currentUserId = '13';
+  static final String currentUserId =  getIt<AuthStorage>().userId ?? '';
 
   final int conversationId;
 

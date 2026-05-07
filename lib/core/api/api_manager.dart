@@ -21,7 +21,6 @@ class ApiManager {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'locale': lang,
-
       'Authorization': 'Bearer $token',
       'userId': userId,
     };

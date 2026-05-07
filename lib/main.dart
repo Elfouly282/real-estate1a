@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: const SplashScreen(),
+        home: const PropertyDetailsScreen(propertyId: 7),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
 import 'package:real_estate_1a/features/home/presentation/pages/conversation_screen.dart';
+import 'package:real_estate_1a/features/notification/notification_screen.dart';
 
 import '../../../../gen/assets.gen.dart';
 import '../cubit/appbar/app_bar_cubit.dart';
@@ -87,8 +88,11 @@ class _HomeAppBarState extends State<HomeAppBar> {
           ),
           actions: [
             IconButton(
-              onPressed: () {
+              onPressed: () async{
                 context.read<AppBarCubit>().clearNotification();
+                await Navigator.of(context).pushNamed(
+                  NotificationsScreen.routeName,
+                );
               },
               icon: CustomSvgImage(
                 path: state.hasNotification

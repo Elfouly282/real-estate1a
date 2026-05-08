@@ -1,20 +1,29 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/features/favourite/pressentation/cubit/favorites_cubit.dart';
+import 'package:real_estate_1a/features/notification/notification_screen.dart';
 import 'package:real_estate_1a/features/property_details/presentation/screens/property_details_screen.dart';
 
 import 'core/bloc observe/bloc_service.dart';
 import 'core/di/di.dart';
+import 'core/notifcation/notification_helper.dart';
 import 'features/home/presentation/cubit/appbar/app_bar_cubit.dart';
 import 'features/home/presentation/cubit/chat/chat_cubit.dart';
 import 'features/home/presentation/pages/chat_screen.dart';
 import 'features/home/presentation/pages/conversation_screen.dart';
 import 'features/home/presentation/pages/home_screen.dart';
+import 'features/notification/cubit/notification_cubit.dart';
 import 'firebase_options.dart';
 import 'splash_screen.dart';
+final navigatorKey = GlobalKey<NavigatorState>();
+final FlutterLocalNotificationsPlugin fln =
+FlutterLocalNotificationsPlugin();
 
+final NotificationCubit notificationCubit = NotificationCubit();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = MyBlocObserver();
@@ -22,6 +31,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await configureDependencies();
+  FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
+  await requestNotificationPermission();
+
+  await NotificationHelper.initialize(
+    fln,
+    notificationCubit,
+    navigatorKey,
+  );
+
   runApp(const MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -46,8 +64,10 @@ class MyApp extends StatelessWidget {
         builder: (context, child) => MaterialApp(
           debugShowCheckedModeBanner: false,
           home: const SplashScreen(),
+          navigatorKey: navigatorKey,
           routes: {
             HomeScreen.routeName: (context) => const HomeScreen(),
+            NotificationsScreen.routeName:(context)=>NotificationsScreen(),
             ConversationsScreen.routeName: (context) {
               final args = ModalRoute.of(context)?.settings.arguments;
 
@@ -75,5 +95,28 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+Future<void> requestNotificationPermission() async {
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  NotificationSettings settings = await messaging.requestPermission(
+    alert: true,
+    badge: true,
+    sound: true,
+    provisional: false,
+    announcement: false,
+    carPlay: false,
+    criticalAlert: false,
+  );
+
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('✅ User granted permission');
+  } else if (settings.authorizationStatus ==
+      AuthorizationStatus.provisional) {
+    print('⚠️ Provisional permission granted');
+  } else {
+    print('❌ Permission denied');
   }
 }

@@ -206,6 +206,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: ElevatedButton(
                           onPressed: () {
                             context.read<AuthCubit>().signInWithGoogle();
+                           Future.delayed(const Duration(seconds: 5),()
+                            {
+                              Navigator.restorablePushReplacementNamed(
+                                  context, HomeScreen.routeName);
+                            });
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.greychip,

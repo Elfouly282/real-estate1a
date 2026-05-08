@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:real_estate_1a/features/favourite/pressentation/cubit/favorites_cubit.dart';
+import 'package:real_estate_1a/features/home/presentation/cubit/home/home_cubit.dart';
 import 'package:real_estate_1a/features/notification/notification_screen.dart';
 import 'package:real_estate_1a/features/property_details/presentation/screens/property_details_screen.dart';
 import 'core/bloc observe/bloc_service.dart';
@@ -64,6 +65,9 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider<ChatCubit>(
           create: (_) => getIt<ChatCubit>(),
+        ),
+        BlocProvider<HomeCubit>(
+          create: (_) => getIt<HomeCubit>(),
         ),
         BlocProvider<FavoritesCubit>(create: (_)=>getIt<FavoritesCubit>())
       ],

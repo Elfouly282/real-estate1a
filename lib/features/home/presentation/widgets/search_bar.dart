@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:real_estate_1a/features/home/presentation/widgets/filter_bottom_sheet.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../cubit/home/home_cubit.dart';
 
@@ -20,6 +21,16 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
     super.dispose();
   }
 
+  void showFilterDialog(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (ctx) => BlocProvider.value(
+        value: context.read<HomeCubit>(),
+        child: const FilterBottomSheet(),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -66,8 +77,13 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(16.r),
               ),
-              child: const Icon(
-                  Icons.tune_rounded, color: Colors.black, size: 20),
+              child: GestureDetector(
+                onTap: (){
+                    showFilterDialog(context);
+                },
+                child: const Icon(
+                    Icons.tune_rounded, color: Colors.black, size: 20),
+              ),
             ),
           ),
         ],

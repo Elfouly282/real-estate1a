@@ -13,7 +13,8 @@ class HomeCubit extends Cubit<HomeState> {
 
   int _selectedFilterIndex = 0;
   int get selectedFilterIndex => _selectedFilterIndex;
-
+  double? _maxPrice;
+  String? _selectedType;
   // ── Original lists ────────────────────────────────────────────────────────
   List<PropertyEntity> _allBestSelling = [];
   List<PropertyEntity> _allNearToYou   = [];
@@ -155,5 +156,55 @@ class HomeCubit extends Cubit<HomeState> {
       featured:    current.data.featured,
       recommended: _allNearToYou,
     )));
+  }
+  // filter function
+
+  void applyFilter({
+    String? type,
+    double? maxPrice,
+  }) {
+    _selectedType = type;
+    _maxPrice = maxPrice;
+
+    final current = state;
+    if (current is! HomeSuccess) return;
+
+    List<PropertyEntity> filterList(List<PropertyEntity> list) {
+      return list.where((p) {
+        final matchType = _selectedType == null ||
+            _selectedType == "All" ||
+            p.category.name == _selectedType;
+        double price = double.tryParse(p.price.toString()) ?? 0.0;
+        final matchPrice = _maxPrice == null ||
+            price<= _maxPrice!;
+
+        return matchType && matchPrice;
+      }).toList();
+    }
+
+    emit(HomeSuccess(
+      HomeResponseEntity(
+        categories: current.data.categories,
+        bestSelling: filterList(_allBestSelling),
+        featured: current.data.featured,
+        recommended: filterList(_allNearToYou),
+      ),
+    ));
+  }
+  void clearFilter() {
+    _selectedType = null;
+    _maxPrice = null;
+
+    final current = state;
+    if (current is! HomeSuccess) return;
+
+    emit(HomeSuccess(
+      HomeResponseEntity(
+        categories: current.data.categories,
+        bestSelling: _allBestSelling,
+        featured: current.data.featured,
+        recommended: _allNearToYou,
+      ),
+    ));
   }
 }

@@ -1,25 +1,25 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../../features/notification/cubit/notification_cubit.dart';
+import '../../firebase_options.dart';
 
 class NotificationHelper {
   static Future<void> initialize(
-      FlutterLocalNotificationsPlugin fln,
-      NotificationCubit cubit,
-      GlobalKey<NavigatorState> navigatorKey,
-      ) async {
-    const AndroidInitializationSettings androidInit =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+    FlutterLocalNotificationsPlugin fln,
+    NotificationCubit cubit,
+    GlobalKey<NavigatorState> navigatorKey,
+  ) async {
+    const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosInit = DarwinInitializationSettings();
 
-    const DarwinInitializationSettings iosInit =
-    DarwinInitializationSettings();
-
-    final InitializationSettings settings = InitializationSettings(
+    const settings = InitializationSettings(
       android: androidInit,
       iOS: iosInit,
     );
@@ -27,11 +27,21 @@ class NotificationHelper {
     await fln.initialize(
       settings,
       onDidReceiveNotificationResponse: (response) {
-        log('🔘 Local notification clicked: ${response.payload}');
+        log('Local notification clicked: ${response.payload}');
+        final payload = response.payload;
+
+        if (payload == null || payload.isEmpty) {
+          return;
+        }
+
+        final data = jsonDecode(payload);
+        if (data is Map<String, dynamic>) {
+          _handleNavigation(data, navigatorKey);
+        }
       },
     );
 
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    const channel = AndroidNotificationChannel(
       'default_channel',
       'Default',
       description: 'Default notifications',
@@ -40,32 +50,28 @@ class NotificationHelper {
 
     await fln
         .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>()
+            AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
 
-    /// 🔔 Foreground messages
     FirebaseMessaging.onMessage.listen((message) async {
       await showNotification(message, fln);
 
       final data = {
-        "title": message.notification?.title ?? message.data['title'],
-        "body": message.notification?.body ?? message.data['body'],
-        "type": message.data['type'] ?? "general",
-        "id": message.data['id'],
+        'title': message.notification?.title ?? message.data['title'],
+        'body': message.notification?.body ?? message.data['body'],
+        'type': message.data['type'] ?? 'general',
+        'id': message.data['id'],
       };
 
       cubit.addNotification(data);
     });
 
-    /// 📲 Click notification (background)
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       log('Notification clicked: ${message.data}');
       _handleNavigation(message.data, navigatorKey);
     });
 
-    /// 🚀 Terminated state
-    final initialMessage =
-    await FirebaseMessaging.instance.getInitialMessage();
+    final initialMessage = await FirebaseMessaging.instance.getInitialMessage();
 
     if (initialMessage != null) {
       log('Opened from terminated notification');
@@ -74,14 +80,13 @@ class NotificationHelper {
   }
 
   static Future<void> showNotification(
-      RemoteMessage message,
-      FlutterLocalNotificationsPlugin fln,
-      ) async {
+    RemoteMessage message,
+    FlutterLocalNotificationsPlugin fln,
+  ) async {
     final title = message.notification?.title ?? message.data['title'];
     final body = message.notification?.body ?? message.data['body'];
 
-    const AndroidNotificationDetails androidDetails =
-    AndroidNotificationDetails(
+    const androidDetails = AndroidNotificationDetails(
       'default_channel',
       'Default',
       importance: Importance.max,
@@ -89,12 +94,12 @@ class NotificationHelper {
       playSound: true,
     );
 
-    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
+    const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentSound: true,
     );
 
-    const NotificationDetails details = NotificationDetails(
+    const details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
@@ -104,34 +109,40 @@ class NotificationHelper {
       title,
       body,
       details,
-      payload: message.data.toString(),
+      payload: jsonEncode(message.data),
     );
   }
 
   static void _handleNavigation(
-      Map<String, dynamic> data,
-      GlobalKey<NavigatorState> navigatorKey,
-      ) {
+    Map<String, dynamic> data,
+    GlobalKey<NavigatorState> navigatorKey,
+  ) {
     final type = data['type'];
+    final id = (data['id'] as num?)?.toInt() ??
+        int.tryParse(data['id']?.toString() ?? '');
 
-    if (type == 'conversations') {
-      navigatorKey.currentState?.pushNamed(
-        '/conversations',
-        arguments: data['id'],
-      );
+    if (id == null) {
+      log('Notification id is missing: $data');
+      return;
+    }
+
+    if (type == 'chat' || type == 'conversation' || type == 'conversations') {
+      navigatorKey.currentState?.pushNamed('/chatScreen', arguments: id);
+      return;
     }
 
     if (type == 'property') {
-      navigatorKey.currentState?.pushNamed(
-        '/propertyDetails',
-        arguments: data['id'],
-      );
+      navigatorKey.currentState?.pushNamed('/propertyDetails', arguments: id);
     }
   }
 }
 
 Future<void> myBackgroundMessageHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   if (kDebugMode) {
-    log('🔔 Background message: ${message.data}');
+    log('Background message: ${message.data}');
   }
 }

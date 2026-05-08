@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
+import 'package:real_estate_1a/features/notification/notification_screen.dart';
 import 'package:real_estate_1a/gen/assets.gen.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../main.dart';
@@ -108,28 +109,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text("Conversations"),
-        actions: [
-          InkWell(child: CustomSvgImage(path: Assets.svg.activeNotification),onTap: () async{
-            const AndroidNotificationDetails androidDetails =
-            AndroidNotificationDetails(
-              'default_channel',
-              'Default',
-              importance: Importance.max,
-              priority: Priority.max,
-            );
-
-            const NotificationDetails details =
-            NotificationDetails(android: androidDetails);
-
-            await fln.show(
-              1,
-              'Test Notification 🔔',
-              'This is a local test',
-              details,
-            );
-          },)
-        ],
+         title: const Text("Conversations"),
       ),
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
@@ -172,7 +152,6 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
               arguments: state.conversationId,
             );
           }
-
           if (state is StartConversationError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message)),

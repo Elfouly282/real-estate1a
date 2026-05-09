@@ -71,6 +71,18 @@ import 'package:real_estate_1a/features/home/presentation/cubit/chat/chat_cubit.
     as _i66;
 import 'package:real_estate_1a/features/home/presentation/cubit/home/home_cubit.dart'
     as _i979;
+import 'package:real_estate_1a/features/maps/data/datasources/remote/home_api_datasource.dart'
+    as _i842;
+import 'package:real_estate_1a/features/maps/data/datasources/remote/home_datasource.dart'
+    as _i767;
+import 'package:real_estate_1a/features/maps/data/repositories/home_repository_impl.dart'
+    as _i1045;
+import 'package:real_estate_1a/features/maps/domain/repo/home_repository.dart'
+    as _i241;
+import 'package:real_estate_1a/features/maps/domain/usecase/get_marker.dart'
+    as _i384;
+import 'package:real_estate_1a/features/maps/presentation/cubit/markers_cubit.dart'
+    as _i522;
 import 'package:real_estate_1a/features/property_details/data/repositories/property_details_repo_impl.dart'
     as _i218;
 import 'package:real_estate_1a/features/property_details/data/repositories/reviews_repo_impl.dart'
@@ -131,11 +143,17 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i896.HistoryDatasource>(
       () => _i853.HistoryRemoteDatasource(gh<_i779.ApiManager>()),
     );
+    gh.lazySingleton<_i767.HomeDatasource>(
+      () => _i842.HomeApiDatasource(gh<_i779.ApiManager>()),
+    );
     gh.factory<_i992.HomeDatasource>(
       () => _i207.HomeRemoteDataSourceImpl(gh<_i779.ApiManager>()),
     );
     gh.factory<_i335.ChatRepository>(
       () => _i461.ChatRepositoryImpl(datasource: gh<_i428.ChatDatasource>()),
+    );
+    gh.lazySingleton<_i241.HomeRepository>(
+      () => _i1045.HomeRepositoryImpl(gh<_i767.HomeDatasource>()),
     );
     gh.factory<_i632.HistoryRepository>(
       () => _i1063.HistoryRepositoryImpl(gh<_i896.HistoryDatasource>()),
@@ -171,6 +189,12 @@ extension GetItInjectableX on _i174.GetIt {
         sendMessageUseCase: gh<_i509.SendMessageUseCase>(),
         startConversationUseCase: gh<_i509.StartConversationUseCase>(),
       ),
+    );
+    gh.lazySingleton<_i384.GetMarkerUsecase>(
+      () => _i384.GetMarkerUsecase(gh<_i241.HomeRepository>()),
+    );
+    gh.factory<_i522.MarkersCubit>(
+      () => _i522.MarkersCubit(gh<_i384.GetMarkerUsecase>()),
     );
     gh.factory<_i670.GetHistoryUseCase>(
       () => _i670.GetHistoryUseCase(gh<_i632.HistoryRepository>()),

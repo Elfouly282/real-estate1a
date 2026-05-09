@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:real_estate_1a/features/favourite/pressentation/cubit/favorites_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/home/home_cubit.dart';
+import 'package:real_estate_1a/features/maps/presentation/cubit/markers_cubit.dart';
 import 'package:real_estate_1a/features/notification/notification_screen.dart';
 import 'package:real_estate_1a/features/property_details/presentation/screens/property_details_screen.dart';
 import 'core/bloc observe/bloc_service.dart';
@@ -21,9 +23,9 @@ import 'features/home/presentation/pages/home_screen.dart';
 import 'features/notification/cubit/notification_cubit.dart';
 import 'firebase_options.dart';
 import 'splash_screen.dart';
+
 final navigatorKey = GlobalKey<NavigatorState>();
-final FlutterLocalNotificationsPlugin fln =
-FlutterLocalNotificationsPlugin();
+final FlutterLocalNotificationsPlugin fln = FlutterLocalNotificationsPlugin();
 
 final NotificationCubit notificationCubit = NotificationCubit();
 void main() async {
@@ -33,43 +35,28 @@ void main() async {
 
   await Hive.openBox('notificationsBox');
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await configureDependencies();
   FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
   await requestNotificationPermission();
   await FcmService.initialize();
 
-  await NotificationHelper.initialize(
-    fln,
-    notificationCubit,
-    navigatorKey,
-  );
+  await NotificationHelper.initialize(fln, notificationCubit, navigatorKey);
 
-  runApp(
-    BlocProvider.value(
-      value: notificationCubit,
-      child: const MyApp(),
-    ),
-  );
+  runApp(BlocProvider.value(value: notificationCubit, child: const MyApp()));
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AppBarCubit>(
-          create: (_) => getIt<AppBarCubit>(),
-        ),
-        BlocProvider<ChatCubit>(
-          create: (_) => getIt<ChatCubit>(),
-        ),
-        BlocProvider<HomeCubit>(
-          create: (_) => getIt<HomeCubit>(),
-        ),
-        BlocProvider<FavoritesCubit>(create: (_)=>getIt<FavoritesCubit>())
+        BlocProvider(create: (_) => getIt<MarkersCubit>()),
+        BlocProvider<AppBarCubit>(create: (_) => getIt<AppBarCubit>()),
+        BlocProvider<ChatCubit>(create: (_) => getIt<ChatCubit>()),
+        BlocProvider<HomeCubit>(create: (_) => getIt<HomeCubit>()),
+        BlocProvider<FavoritesCubit>(create: (_) => getIt<FavoritesCubit>()),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),
@@ -77,11 +64,11 @@ class MyApp extends StatelessWidget {
         splitScreenMode: true,
         builder: (context, child) => MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: const SplashScreen(),
+          home: const HomeScreen(),
           navigatorKey: navigatorKey,
           routes: {
             HomeScreen.routeName: (context) => const HomeScreen(),
-            NotificationsScreen.routeName:(context)=>NotificationsScreen(),
+            NotificationsScreen.routeName: (context) => NotificationsScreen(),
             ConversationsScreen.routeName: (context) {
               final args = ModalRoute.of(context)?.settings.arguments;
 
@@ -99,17 +86,19 @@ class MyApp extends StatelessWidget {
 
               return ChatScreen(conversationId: conversationId);
             },
-            PropertyDetailsScreen.routeName:(context){
-              final propertyId = ModalRoute.of(context)!.settings.arguments as int;
+            PropertyDetailsScreen.routeName: (context) {
+              final propertyId =
+                  ModalRoute.of(context)!.settings.arguments as int;
 
               return PropertyDetailsScreen(propertyId: propertyId);
-            }
+            },
           },
         ),
       ),
     );
   }
 }
+
 Future<void> requestNotificationPermission() async {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
@@ -125,8 +114,7 @@ Future<void> requestNotificationPermission() async {
 
   if (settings.authorizationStatus == AuthorizationStatus.authorized) {
     print('User granted permission');
-  } else if (settings.authorizationStatus ==
-      AuthorizationStatus.provisional) {
+  } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
     print('Provisional permission granted');
   } else {
     print('Permission denied');

@@ -2,6 +2,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="real_estate_1a"
         android:name="${applicationName}"
@@ -9,7 +10,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCuTilAfnGfkZtIx0T3qf-eOmWZ_N2LpoY" />
+            android:value="AIzaSyBRaeO8OYKPfCMGAgGVg8oy34Hlt3tAhEA" />
 
         <activity
             android:name=".MainActivity"

@@ -23,6 +23,7 @@ class FilterChips extends StatelessWidget {
         return SizedBox(
           height: 36.h,
           child: ListView.separated(
+            physics: BouncingScrollPhysics(),
             scrollDirection: Axis.horizontal,
             itemCount: categories.length, // ✅
             separatorBuilder: (_, __) => SizedBox(width: 8.w),

@@ -124,7 +124,7 @@ class _HomeContent extends StatelessWidget {
     return BlocBuilder<HomeCubit, HomeState>(
       builder: (context, state) {
         if (state is HomeLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(color: AppColors.infoColor,));
         }
 
         if (state is HomeError) {
@@ -179,6 +179,7 @@ class _HomeContent extends StatelessWidget {
                 height: 270.h,
                 child:  state.data.bestSelling.isEmpty?Center(child: Text("No properties found",style:TextStyle(color: AppColors.primaryColor),)):
                 ListView.separated(
+                  physics: BouncingScrollPhysics(),
                   scrollDirection: Axis.horizontal,
                   itemCount: state.data.bestSelling.length,
                   separatorBuilder: (_, __) => SizedBox(width: 12.w),

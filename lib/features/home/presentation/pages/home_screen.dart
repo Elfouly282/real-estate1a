@@ -6,6 +6,8 @@ import 'package:real_estate_1a/features/history/presentation/pages/history_tab.d
 import 'package:real_estate_1a/features/home/presentation/cubit/appbar/app_bar_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/chat/chat_cubit.dart';
 import 'package:real_estate_1a/features/home/presentation/pages/tabs/home_tab.dart';
+import 'package:real_estate_1a/features/maps/presentation/screens/mapsscreen.dart';
+import 'package:real_estate_1a/features/maps/presentation/screens/widgets/appbar_map.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/bottom_nav_bar.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/home_app_bar.dart';
 import '../../../../../core/di/di.dart';
@@ -21,7 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final _pages = [
     const HomeTab(),
     FavoritesTab(),
-    const _PlaceholderPage(label: 'Map',color: Color(0xFFE6F1FB)),
+    MapTest (),
+    // const _PlaceholderPage(label: 'Map',color: Color(0xFFE6F1FB)),
      HistoryTab(),
     const _PlaceholderPage(label: 'Profile',  color: Color(0xFFEEEDFE)),
   ];

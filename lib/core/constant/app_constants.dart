@@ -1,7 +1,7 @@
 class AppConstants {
   static const String baseUrl = 'https://real.newcinderella.online/api/v1/';
   static const String RealEstatebaseUrl = 'https://real.newcinderella.online/';
-
+ 
   static const String homeEndPoint = 'api/v1/home';
   static const String getFavorite = 'api/v1/favorites';
   static String favoriteById(int id) => 'api/v1/favorites/$id';

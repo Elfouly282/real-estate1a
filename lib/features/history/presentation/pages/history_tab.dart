@@ -39,11 +39,6 @@ class _HistoryView extends StatelessWidget {
               'Your History',
               style: getBoldStyle(fontSize: 18, color: AppColors.black),
             ),
-         InkWell(onTap: () {
-           
-         },
-         child: Text("Edit",style: getMediumStyle(fontSize: 14, color:AppColors.primaryColor),),
-         )
           ],
         ),
         centerTitle: false,

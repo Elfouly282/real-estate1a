@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:real_estate_1a/core/constant/snakbar.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/core/utils/app_styles.dart';
 import 'package:real_estate_1a/features/home/presentation/cubit/appbar/app_bar_cubit.dart';
@@ -59,21 +60,24 @@ class _HomeTabView extends StatelessWidget {
           listener: (context, state) {
               // ✅ FavoriteActionSuccess — added or removed
               if (state is FavoriteActionSuccess ) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      state.isAdded
-                          ? 'Added to favorites ❤️'
-                          : 'Removed from favorites 💔',
-                    ),
-                    backgroundColor:
-                    state.isAdded ? Colors.green : Colors.red,
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-              }
 
-              // ✅ Error
+                CustomSnackbar(
+                    state.isAdded ? Colors.green : Colors.red, state.isAdded
+                    ? 'Added to favorites ❤️'
+                    : 'Removed from favorites 💔', false).show(context);
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //   SnackBar(
+                //     content: Text(
+                //       state.isAdded
+                //           ? 'Added to favorites ❤️'
+                //           : 'Removed from favorites 💔',
+                //     ),
+                //     backgroundColor:
+                //     state.isAdded ? Colors.green : Colors.red,
+                //     duration: const Duration(seconds: 2),
+                //   ),
+                // );
+              }
               if (state is FavoritesError) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(

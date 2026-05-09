@@ -4,9 +4,6 @@ abstract class ChatState {}
 
 class ChatInitial extends ChatState {}
 
-// ─────────────────────────────
-// Conversations list
-// ─────────────────────────────
 
 class ConversationsLoading extends ChatState {}
 
@@ -22,9 +19,6 @@ class ConversationsError extends ChatState {
   ConversationsError(this.message);
 }
 
-// ─────────────────────────────
-// Single conversation + messages
-// ─────────────────────────────
 
 class ConversationLoading extends ChatState {}
 
@@ -40,10 +34,6 @@ class ConversationError extends ChatState {
   ConversationError(this.message);
 }
 
-// ─────────────────────────────
-// Send message
-// ─────────────────────────────
-
 class SendMessageLoading extends ChatState {}
 
 class SendMessageSuccess extends ChatState {}
@@ -54,9 +44,6 @@ class SendMessageError extends ChatState {
   SendMessageError(this.message);
 }
 
-// ─────────────────────────────
-// Start conversation
-// ─────────────────────────────
 
 class StartConversationLoading extends ChatState {}
 

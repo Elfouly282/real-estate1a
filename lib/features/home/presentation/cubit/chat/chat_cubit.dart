@@ -3,6 +3,7 @@ import 'package:injectable/injectable.dart';
 import 'package:real_estate_1a/features/home/domain/entities/chat_entity.dart';
 import 'package:real_estate_1a/features/home/domain/usecases/chat_usecase.dart';
 part 'chat_state.dart';
+
 @injectable
 class ChatCubit extends Cubit<ChatState> {
   final ListConversationUsecase listConversationUsecase;
@@ -30,10 +31,10 @@ class ChatCubit extends Cubit<ChatState> {
     final result = await listConversationUsecase.invoke();
 
     result.fold(
-      (failure) => emit(ConversationsError(failure.message)),
-      (data) {
+          (failure) => emit(ConversationsError(failure.message)),
+          (data) {
         conversations = data;
-        emit(ConversationsSuccess(data)); // data = List<ConversationEntity>
+        emit(ConversationsSuccess(data));
       },
     );
   }
@@ -44,17 +45,18 @@ class ChatCubit extends Cubit<ChatState> {
     emit(ConversationLoading());
 
     final result =
-        await getConversationAndMessageUseCase.invoke(conversationId);
+    await getConversationAndMessageUseCase.invoke(conversationId);
 
     result.fold(
-      (failure) => emit(ConversationError(failure.message)),
-      (data) {
+          (failure) => emit(ConversationError(failure.message)),
+          (data) {
         currentConversation = data;
         messages = data.messages ?? [];
         emit(ConversationSuccess(data));
       },
     );
   }
+
   Future<void> sendMessage({
     required int conversationId,
     required String message,
@@ -67,10 +69,9 @@ class ChatCubit extends Cubit<ChatState> {
     );
 
     result.fold(
-      (failure) => emit(SendMessageError(failure.message)),
-      (_) async {
+          (failure) => emit(SendMessageError(failure.message)),
+          (_) async {
         emit(SendMessageSuccess());
-
         await getConversationAndMessages(conversationId);
       },
     );
@@ -88,8 +89,8 @@ class ChatCubit extends Cubit<ChatState> {
     );
 
     result.fold(
-      (failure) => emit(StartConversationError(failure.message)),
-      (data) async {
+          (failure) => emit(StartConversationError(failure.message)),
+          (data) {
         final conversationId = data.id?.toInt();
 
         if (conversationId == null) {
@@ -98,7 +99,6 @@ class ChatCubit extends Cubit<ChatState> {
         }
 
         emit(StartConversationSuccess(conversationId));
-        await getConversationAndMessages(conversationId);
       },
     );
   }

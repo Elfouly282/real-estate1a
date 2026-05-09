@@ -164,8 +164,8 @@ class _SimilarPropertyCardWidgetState extends State<SimilarPropertyCardWidget> {
           child: Row(
             children: [
               Text(
-                widget.property.address,
-                style: getLightStyle(
+                widget.property.address.length>20?widget.property.address.substring(0,20):widget.property.address
+                ,style: getLightStyle(
                   fontSize: AppFonts.labelSmall,
                   color: AppColors.textSecondaryColor,
                 ),

@@ -64,15 +64,10 @@ class FavoriteCard extends StatelessWidget {
                      overflow: TextOverflow.clip,
                      style: getMediumStyle(fontSize: 16, color:Colors.black),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          context.read<FavoritesCubit>().removeFromFavorite(p.id);
-                        },
-                        child: Icon(
-                           Icons.star ,
-                          size: 24.sp,
-                          color: Colors.amberAccent
-                        ),
+                      Icon(
+                         Icons.star ,
+                        size: 24.sp,
+                        color: Colors.amberAccent
                       ),                    ],
                   ),
                 ),

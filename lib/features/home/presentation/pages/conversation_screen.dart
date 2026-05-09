@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:real_estate_1a/core/constant/custom_svg_image.dart';
-import 'package:real_estate_1a/features/notification/notification_screen.dart';
-import 'package:real_estate_1a/gen/assets.gen.dart';
+import 'package:real_estate_1a/core/constant/snakbar.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../main.dart';
 import '../../domain/entities/chat_entity.dart';
 import '../cubit/chat/chat_cubit.dart';
 import 'chat_screen.dart';
@@ -16,11 +12,7 @@ class ConversationsScreen extends StatefulWidget {
   final int? agentUserId;
   final int? propertyId;
 
-  const ConversationsScreen({
-    super.key,
-    this.agentUserId,
-    this.propertyId,
-  });
+  const ConversationsScreen({super.key, this.agentUserId, this.propertyId});
 
   @override
   State<ConversationsScreen> createState() => _ConversationsScreenState();
@@ -31,6 +23,30 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
   void initState() {
     super.initState();
     context.read<ChatCubit>().getConversations();
+  }
+
+  String _agentName(ConversationEntity conversation) {
+    final agentUserName = conversation.agentUser?.user.name.trim();
+    if (agentUserName != null && agentUserName.isNotEmpty) {
+      return agentUserName;
+    }
+
+    final agentTitle = conversation.agentUser?.title.trim();
+    if (agentTitle != null && agentTitle.isNotEmpty) {
+      return agentTitle;
+    }
+
+    final propertyAgentName = conversation.property?.agent.user.name.trim();
+    if (propertyAgentName != null && propertyAgentName.isNotEmpty) {
+      return propertyAgentName;
+    }
+
+    final propertyAgentTitle = conversation.property?.agent.title.trim();
+    if (propertyAgentTitle != null && propertyAgentTitle.isNotEmpty) {
+      return propertyAgentTitle;
+    }
+
+    return 'Unknown Agent';
   }
 
   @override
@@ -49,9 +65,9 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
       }
 
       await context.read<ChatCubit>().startConversation(
-            agentUserId: agentUserId,
-            propertyId: propertyId,
-          );
+        agentUserId: agentUserId,
+        propertyId: propertyId,
+      );
     }
 
     Widget buildConversationList(List<ConversationEntity> conversations) {
@@ -63,17 +79,20 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
         itemCount: conversations.length,
         itemBuilder: (context, index) {
           final conversation = conversations[index];
+          final agentName = _agentName(conversation);
 
           return ListTile(
-            leading: const CircleAvatar(
-              child: Icon(
-                Icons.person,
-                color: AppColors.primaryColor,
+            leading: CircleAvatar(
+              backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+              child: Text(
+                agentName[0].toUpperCase(),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
               ),
             ),
-            title: Text(
-              conversation.user?.name ?? '',
-            ),
+            title: Text(agentName),
             subtitle: Text(
               (conversation.messages?.isNotEmpty ?? false)
                   ? conversation.messages!.last.body ?? ''
@@ -109,16 +128,13 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
-         title: const Text("Conversations"),
+        title: const Text("Conversations"),
       ),
       body: BlocBuilder<ChatCubit, ChatState>(
         builder: (context, state) {
-
           if (state is ConversationsLoading) {
             return const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.primaryColor,
-              ),
+              child: CircularProgressIndicator(color: AppColors.primaryColor),
             );
           }
 
@@ -127,9 +143,7 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
           }
 
           if (state is ConversationsSuccess) {
-
-            final List<ConversationEntity> conversations =
-                state.conversations;
+            final List<ConversationEntity> conversations = state.conversations;
 
             return buildConversationList(conversations);
           }
@@ -153,9 +167,9 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
             );
           }
           if (state is StartConversationError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            CustomSnackbar(
+              AppColors.primaryColor,state.message,true
+            ).show(context);
           }
         },
         builder: (context, state) {
@@ -173,13 +187,11 @@ class _ConversationsScreenState extends State<ConversationsScreen> {
                       color: Colors.white,
                     ),
                   )
-                : const Icon(Icons.add_comment),
-            label: Text(isLoading ? 'Starting...' : 'Start chat'),
+                : const Icon(Icons.add,color: AppColors.white,),
+            label: Text(isLoading ? 'Starting...' : 'Start Chat',style: TextStyle(color: AppColors.white),),
           );
-
         },
       ),
-
     );
   }
 }

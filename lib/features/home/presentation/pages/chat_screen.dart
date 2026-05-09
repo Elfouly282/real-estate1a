@@ -9,14 +9,10 @@ import '../../../../core/security/security_helper.dart';
 
 class ChatScreen extends StatefulWidget {
   static const String routeName = "/chatScreen";
-  static final String currentUserId =  getIt<AuthStorage>().userId ?? '';
 
   final int conversationId;
 
-  const ChatScreen({
-    super.key,
-    required this.conversationId,
-  });
+  const ChatScreen({super.key, required this.conversationId});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -25,13 +21,13 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final _chatController = InMemoryChatController();
 
+  String get _currentUserId => getIt<AuthStorage>().userId ?? '';
+
   @override
   void initState() {
     super.initState();
 
-    context
-        .read<ChatCubit>()
-        .getConversationAndMessages(widget.conversationId);
+    context.read<ChatCubit>().getConversationAndMessages(widget.conversationId);
   }
 
   @override
@@ -41,18 +37,18 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   void _loadMessages(ConversationSuccess state) {
-    _chatController.setMessages(
-      state.conversation.messages?.map((message) {
-        return TextMessage(
-          id: message.id.toString(),
-          authorId: message.sender?.id.toString() ?? '',
-          createdAt: DateTime.tryParse(message.createdAt ?? '') ??
-              DateTime.now(),
-          text: message.body ?? '',
-        );
-      }).toList() ??
-          [],
-    );
+    final messages = state.conversation.messages ?? [];
+
+    final mappedMessages = messages.map((message) {
+      return TextMessage(
+        id: message.id.toString(),
+        authorId: message.sender?.id.toString() ?? '',
+        createdAt: DateTime.tryParse(message.createdAt ?? '') ?? DateTime.now(),
+        text: message.body ?? '',
+      );
+    }).toList();
+
+    _chatController.setMessages(mappedMessages);
   }
 
   Widget _buildBody(ChatState state) {
@@ -64,33 +60,25 @@ class _ChatScreenState extends State<ChatScreen> {
       return Center(child: Text(state.message));
     }
 
-    if (state is SendMessageError) {
-      return Center(child: Text(state.message));
-    }
-
     return Chat(
       chatController: _chatController,
-      currentUserId: ChatScreen.currentUserId,
+      currentUserId: _currentUserId,
       onMessageSend: (text) async {
         final tempMessage = TextMessage(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
-          authorId: ChatScreen.currentUserId,
+          authorId: _currentUserId,
           createdAt: DateTime.now().toUtc(),
           text: text,
         );
 
         _chatController.insertMessage(tempMessage);
-
-        await context.read<ChatCubit>().sendMessage(
+        context.read<ChatCubit>().sendMessage(
           conversationId: widget.conversationId,
           message: text,
         );
       },
       resolveUser: (UserID id) async {
-        return User(
-          id: id,
-          name: id == ChatScreen.currentUserId ? 'Me' : 'Agent',
-        );
+        return User(id: id, name: id == _currentUserId ? 'Me' : 'Agent');
       },
     );
   }
@@ -102,10 +90,16 @@ class _ChatScreenState extends State<ChatScreen> {
         if (state is ConversationSuccess) {
           _loadMessages(state);
         }
+
+        if (state is SendMessageError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(title: const Text('Chat')),
+          appBar: AppBar(title: const Text('Chat'), centerTitle: true),
           body: _buildBody(state),
         );
       },

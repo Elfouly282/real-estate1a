@@ -8,14 +8,13 @@ class CategoryModel extends CategoryEntity {
     required super.description,
     required super.sortOrder,
   });
-  factory CategoryModel.fromJson(Map<String, dynamic> json) =>
-      CategoryModel(
-        id: json['id'] ?? 0,
-        name: json['name'] ?? '',
-        slug: json['slug'] ?? '',
-        description: json['description'] ?? '',
-        sortOrder: json['sort_order'] ?? 0,
-      );
+  factory CategoryModel.fromJson(Map<String, dynamic> json) => CategoryModel(
+    id: json['id'] ?? 0,
+    name: json['name'] ?? '',
+    slug: json['slug'] ?? '',
+    description: json['description'] ?? '',
+    sortOrder: json['sort_order'] ?? 0,
+  );
   Map<String, dynamic> toJson() {
     return {
       "id": id,
@@ -26,6 +25,7 @@ class CategoryModel extends CategoryEntity {
     };
   }
 }
+
 // ── Image Model ──────────────────────────────────────────────────────────
 class ImageModel extends ImageEntity {
   const ImageModel({
@@ -34,21 +34,17 @@ class ImageModel extends ImageEntity {
     required super.sortOrder,
   });
 
-  factory ImageModel.fromJson(Map<String, dynamic> json) =>
-      ImageModel(
-        id: json['id'] ?? 0,
-        url: json['url'] ?? '',
-        sortOrder: json['sort_order'] ?? 0,
-      );
+  factory ImageModel.fromJson(Map<String, dynamic> json) => ImageModel(
+    id: json['id'] ?? 0,
+    url: json['url'] ?? '',
+    sortOrder: json['sort_order'] ?? 0,
+  );
 
   Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "url": url,
-      "sort_order": sortOrder,
-    };
+    return {"id": id, "url": url, "sort_order": sortOrder};
   }
 }
+
 // ── User Model ────────────────────────────────────────────────────────────────
 class UserModel extends UserEntity {
   UserModel({
@@ -61,16 +57,15 @@ class UserModel extends UserEntity {
     required super.createdAt,
   });
 
-  factory UserModel.fromJson(Map<String, dynamic> json) =>
-      UserModel(
-        id: json['id'] ?? 0,
-        name: json['name'] ?? '',
-        email: json['email'] ?? '',
-        role: json['role'] ?? '',
-        location: json['location'],
-        phone: json['phone'],
-        createdAt: json['created_at'],
-      );
+  factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+    id: json['id'] ?? 0,
+    name: json['name'] ?? '',
+    email: json['email'] ?? '',
+    role: json['role'] ?? '',
+    location: json['location'],
+    phone: json['phone'],
+    createdAt: json['created_at'],
+  );
 
   Map<String, dynamic> toJson() {
     return {
@@ -84,6 +79,7 @@ class UserModel extends UserEntity {
     };
   }
 }
+
 // ── Agent Model ──────────────────────────────────────────────────────────────
 class AgentModel extends AgentEntity {
   const AgentModel({
@@ -95,25 +91,20 @@ class AgentModel extends AgentEntity {
     required super.user,
   });
 
-  factory AgentModel.fromJson(Map<String, dynamic> json) =>
-      AgentModel(
-        id: json['id'] ?? 0,
-        title: json['title'] ?? '',
-        bio: json['bio'] ?? '',
-        licenseNumber: json['license_number'],
-        company: json['company'] ?? '',
-        user: json['user'] != null
-            ? UserModel.fromJson(json['user'])
-            : UserModel(
-          id: 0,
-          name: '',
-          email: '',
-          role: '',
-          location: null,
-          phone: null,
-          createdAt: null,
-        ),
-      );
+  factory AgentModel.fromJson(Map<String, dynamic> json) {
+    final userJson = json['user'];
+
+    return AgentModel(
+      id: json['id'] ?? 0,
+      title: json['title'] ?? json['name'] ?? '',
+      bio: json['bio'] ?? '',
+      licenseNumber: json['license_number'],
+      company: json['company'] ?? '',
+      user: userJson is Map<String, dynamic>
+          ? UserModel.fromJson(userJson)
+          : UserModel.fromJson(json),
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -153,65 +144,56 @@ class PropertyModel extends PropertyEntity {
     required super.agent,
   });
 
-  factory PropertyModel.fromJson(Map<String, dynamic> json) =>
-      PropertyModel(
-        id: json['id'] ?? 0,
-        title: json['title'] ?? '',
-        slug: json['slug'] ?? '',
-        description: json['description'] ?? '',
-        price: json['price'] ?? '',
-        listingType: json['listing_type'] ?? '',
-        status: json['status'] ?? '',
-        bedrooms: json['bedrooms'] ?? 0,
-        bathrooms: json['bathrooms'] ?? 0,
-        kitchens: json['kitchens'] ?? 0,
-        isFeatured: json['is_featured'] ?? false,
-        salesCount: json['sales_count'] ?? 0,
-        rate: json['rate'] != null
-            ? (json['rate'] as num).toDouble()
-            : null,
-        latitude: json['lat'] != null
-            ? (json['lat'] as num).toDouble()
-            : 0.0,
-        longitude: json['lng'] != null
-            ? (json['lng'] as num).toDouble()
-            : 0.0,
-        address: json['address'] ?? '',
-        distanceKm: json['distance_km'] != null
-            ? (json['distance_km'] as num).toDouble()
-            : null,
-        category: json['category'] != null
-            ? CategoryModel.fromJson(json['category'])
-            : CategoryModel(
-          id: 0,
-          name: '',
-          slug: '',
-          description: '',
-          sortOrder: 0,
-        ),
-        images: json['images'] != null
-            ? (json['images'] as List)
-            .map((e) => ImageModel.fromJson(e))
-            .toList()
-            : [],
-        agent: json['agent'] != null
-            ? AgentModel.fromJson(json['agent'])
-            : AgentModel(
-          id: 0,
-          title: '',
-          bio: '',
-          company: '',
-          user: UserModel(
+  factory PropertyModel.fromJson(Map<String, dynamic> json) => PropertyModel(
+    id: json['id'] ?? 0,
+    title: json['title'] ?? '',
+    slug: json['slug'] ?? '',
+    description: json['description'] ?? '',
+    price: json['price'] ?? '',
+    listingType: json['listing_type'] ?? '',
+    status: json['status'] ?? '',
+    bedrooms: json['bedrooms'] ?? 0,
+    bathrooms: json['bathrooms'] ?? 0,
+    kitchens: json['kitchens'] ?? 0,
+    isFeatured: json['is_featured'] ?? false,
+    salesCount: json['sales_count'] ?? 0,
+    rate: json['rate'] != null ? (json['rate'] as num).toDouble() : null,
+    latitude: json['lat'] != null ? (json['lat'] as num).toDouble() : 0.0,
+    longitude: json['lng'] != null ? (json['lng'] as num).toDouble() : 0.0,
+    address: json['address'] ?? '',
+    distanceKm: json['distance_km'] != null
+        ? (json['distance_km'] as num).toDouble()
+        : null,
+    category: json['category'] != null
+        ? CategoryModel.fromJson(json['category'])
+        : CategoryModel(
             id: 0,
             name: '',
-            email: '',
-            role: '',
-            location: null,
-            phone: null,
-            createdAt: null,
+            slug: '',
+            description: '',
+            sortOrder: 0,
           ),
-        ),
-      );
+    images: json['images'] != null
+        ? (json['images'] as List).map((e) => ImageModel.fromJson(e)).toList()
+        : [],
+    agent: json['agent'] != null
+        ? AgentModel.fromJson(json['agent'])
+        : AgentModel(
+            id: 0,
+            title: '',
+            bio: '',
+            company: '',
+            user: UserModel(
+              id: 0,
+              name: '',
+              email: '',
+              role: '',
+              location: null,
+              phone: null,
+              createdAt: null,
+            ),
+          ),
+  );
 
   Map<String, dynamic> toJson() {
     return {
@@ -263,23 +245,23 @@ class HomeResponseModel extends HomeResponseEntity {
     return HomeResponseModel(
       categories: data['categories'] != null
           ? (data['categories'] as List)
-          .map((e) => CategoryModel.fromJson(e))
-          .toList()
+                .map((e) => CategoryModel.fromJson(e))
+                .toList()
           : [],
       bestSelling: data['best_selling'] != null
           ? (data['best_selling'] as List)
-          .map((e) => PropertyModel.fromJson(e))
-          .toList()
+                .map((e) => PropertyModel.fromJson(e))
+                .toList()
           : [],
       featured: data['featured'] != null
           ? (data['featured'] as List)
-          .map((e) => PropertyModel.fromJson(e))
-          .toList()
+                .map((e) => PropertyModel.fromJson(e))
+                .toList()
           : [],
       recommended: data['recommended'] != null
           ? (data['recommended'] as List)
-          .map((e) => PropertyModel.fromJson(e))
-          .toList()
+                .map((e) => PropertyModel.fromJson(e))
+                .toList()
           : [],
     );
   }
@@ -293,13 +275,11 @@ class HomeResponseModel extends HomeResponseEntity {
         "best_selling": bestSelling
             .map((e) => (e as PropertyModel).toJson())
             .toList(),
-        "featured": featured
-            .map((e) => (e as PropertyModel).toJson())
-            .toList(),
+        "featured": featured.map((e) => (e as PropertyModel).toJson()).toList(),
         "recommended": recommended
             .map((e) => (e as PropertyModel).toJson())
             .toList(),
-      }
+      },
     };
   }
 }

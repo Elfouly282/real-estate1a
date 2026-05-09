@@ -82,7 +82,7 @@ class PropertyDetailsScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   if (state.property.agent != null)
-                    ListingAgentWidget(agent: state.property.agent!),
+                    ListingAgentWidget(agent: state.property.agent!,propertyId: propertyId,),
                   const SizedBox(height: 20),
                PropertyLocationMap(latitude:state.property.latitude ,longitude:state.property.longitude) ,
                   const SizedBox(height: 20),

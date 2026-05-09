@@ -7,9 +7,14 @@ import 'package:real_estate_1a/features/favourite/pressentation/cubit/favorites_
 import 'package:real_estate_1a/features/favourite/pressentation/widget/Favorite_card.dart';
 import '../../../../../core/di/di.dart';
 
-class FavoritesTab extends StatelessWidget {
+class FavoritesTab extends StatefulWidget {
   const FavoritesTab({super.key});
 
+  @override
+  State<FavoritesTab> createState() => _FavoritesTabState();
+}
+
+class _FavoritesTabState extends State<FavoritesTab> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -19,8 +24,15 @@ class FavoritesTab extends StatelessWidget {
   }
 }
 
-class _FavoritesView extends StatelessWidget {
+class _FavoritesView extends StatefulWidget {
   const _FavoritesView();
+
+  @override
+  State<_FavoritesView> createState() => _FavoritesViewState();
+}
+
+class _FavoritesViewState extends State<_FavoritesView> {
+  bool isEditMode = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,72 +46,48 @@ class _FavoritesView extends StatelessWidget {
           children: [
             Text(
               'Your Favorites',
-              style: getBoldStyle(fontSize: 18, color: AppColors.black),
+              style: getBoldStyle(
+                fontSize: 18,
+                color: AppColors.black,
+              ),
             ),
-         InkWell(onTap: () {
-           
-         },
-         child: Text("Edit",style: getMediumStyle(fontSize: 14, color:AppColors.primaryColor),),
-         )
+            InkWell(
+              onTap: () {
+                setState(() {
+                  isEditMode = !isEditMode;
+                });
+              },
+              child: Text(
+                isEditMode ? "Done" : "Edit",
+                style: getMediumStyle(
+                  fontSize: 14,
+                  color: AppColors.primaryColor,
+                ),
+              ),
+            )
           ],
         ),
-        centerTitle: false,
       ),
+
       body: BlocBuilder<FavoritesCubit, FavoritesState>(
         builder: (context, state) {
-          // ── Loading ────────────────────────────────────────────────────────
           if (state is FavoritesLoading) {
-            return const Center(child: CircularProgressIndicator(color: AppColors.primaryColor,));
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.primaryColor,
+              ),
+            );
           }
-          // ── Error ──────────────────────────────────────────────────────────
+
           if (state is FavoritesError) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.wifi_off_rounded,
-                      size: 48, color: Colors.grey),
-                  SizedBox(height: 12.h),
-                  Text(state.message,
-                      style: getRegularStyle(
-                          fontSize: 14, color: Colors.grey)),
-                  SizedBox(height: 16.h),
-                  ElevatedButton(
-                    onPressed: () =>
-                        context.read<FavoritesCubit>().getFavorites(),
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor),
-                    child: Text('Retry',
-                        style: getRegularStyle(
-                            fontSize: 14, color: Colors.white)),
-                  ),
-                ],
-              ),
-            );
+            return Center(child: Text(state.message));
           }
 
-          // ── Empty ──────────────────────────────────────────────────────────
-          if (state is FavoritesSuccess && state.data.properties.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.star_border,
-                      size: 64, color: Colors.grey[300]),
-                  SizedBox(height: 16.h),
-                  Text('No favorites yet',
-                      style: getMediumStyle(
-                          fontSize: 16, color: Colors.grey)),
-                  SizedBox(height: 8.h),
-                  Text('Save properties you like to see them here',
-                      style: getRegularStyle(
-                          fontSize: 13, color: Colors.grey)),
-                ],
-              ),
-            );
+          if (state is FavoritesSuccess &&
+              state.data.properties.isEmpty) {
+            return const Center(child: Text("No favorites yet"));
           }
 
-          // ── Success ────────────────────────────────────────────────────────
           if (state is FavoritesSuccess) {
             return RefreshIndicator(
               color: AppColors.primaryColor,
@@ -108,12 +96,39 @@ class _FavoritesView extends StatelessWidget {
               child: ListView.separated(
                 padding: EdgeInsets.all(16.w),
                 itemCount: state.data.properties.length,
-                separatorBuilder: (_, __) => SizedBox(height: 12.h),
+                separatorBuilder: (_, __) =>
+                    SizedBox(height: 12.h),
                 itemBuilder: (_, i) {
                   final property = state.data.properties[i];
+
                   return Stack(
                     children: [
                       FavoriteCard(p: property),
+
+                      if (isEditMode)
+                        Positioned(
+                          top: 8,
+                          right: 8,
+                          child: GestureDetector(
+                            onTap: () {
+                              context
+                                  .read<FavoritesCubit>()
+                                  .removeFromFavorite(property.id);
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                size: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   );
                 },
@@ -121,7 +136,7 @@ class _FavoritesView extends StatelessWidget {
             );
           }
 
-          return const SizedBox.shrink();
+          return const SizedBox();
         },
       ),
     );

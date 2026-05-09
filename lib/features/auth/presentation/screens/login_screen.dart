@@ -12,10 +12,8 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_styles.dart';
 import '../../../../gen/assets.gen.dart';
 import '../cubit/auth_cubit.dart';
-
 import '../../../../../core/di.dart';
 import '../cubit/auth_state.dart';
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -42,27 +40,55 @@ class _LoginScreenState extends State<LoginScreen> {
       create: (context) => getIt<AuthCubit>(),
       child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
-          if (state is AuthSuccess) {
-            CustomSnackbar(
-              AppColors.primaryColor,
-              'Signed in successfully!',
-              false,
-            ).show(context);
-            Future.delayed(const Duration(seconds: 1), () {
-             // AppFunctions.navigateToAndFinish(context, const HomeScreen());
-            });
-          } else if (state is GoogleAuthSuccess) {
-            CustomSnackbar(
-              AppColors.primaryColor,
-              'Signed in with Google successfully!',
-              false,
-            ).show(context);
-            Future.delayed(const Duration(seconds: 1), () {
-           //   AppFunctions.navigateToAndFinish(context, const HomeScreen());
-            });
-          } else if (state is AuthError) {
-            CustomSnackbar(AppColors.errorColor, state.message, false).show(context);
-          }
+
+  if (state is AuthSuccess) {
+    CustomSnackbar(
+      AppColors.primaryColor,
+      'Signed in successfully!',
+      false,
+    ).show(context);
+
+    Navigator.restorablePushReplacementNamed(
+      context,
+      HomeScreen.routeName,
+    );
+  }
+
+  else if (state is AuthError) {
+    CustomSnackbar(
+      AppColors.errorColor,
+      state.message,
+      false,
+    ).show(context);
+  }
+
+  else if (state is GoogleAuthSuccess) {
+    Navigator.restorablePushReplacementNamed(
+      context,
+      HomeScreen.routeName,
+    );
+  }
+          // if (state is AuthSuccess) {
+          //   CustomSnackbar(
+          //     AppColors.primaryColor,
+          //     'Signed in successfully!',
+          //     false,
+          //   ).show(context);
+          //   Future.delayed(const Duration(seconds: 1), () {
+          //    // AppFunctions.navigateToAndFinish(context, const HomeScreen());
+          //   });
+          // } else if (state is GoogleAuthSuccess) {
+          //   CustomSnackbar(
+          //     AppColors.primaryColor,
+          //     'Signed in with Google successfully!',
+          //     false,
+          //   ).show(context);
+          //   Future.delayed(const Duration(seconds: 1), () {
+          //  //   AppFunctions.navigateToAndFinish(context, const HomeScreen());
+          //   });
+          // } else if (state is AuthError) {
+          //   CustomSnackbar(AppColors.errorColor, state.message, false).show(context);
+          // }
         },
         builder: (context, state) {
           return Scaffold(
@@ -175,8 +201,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               password:
                               _passwordController.text.trim(),
                             );
-                            Navigator.restorablePushReplacementNamed(context, HomeScreen.routeName);
-                          }
+//                             if(state is AuthSuccess){
+//  Navigator.restorablePushReplacementNamed(context, HomeScreen.routeName);
+//                             }else{
+//                               print("Forrbidan");
+//                             }
+                           
+                          } 
                         },
                       ),
                       SizedBox(height: 24.h),

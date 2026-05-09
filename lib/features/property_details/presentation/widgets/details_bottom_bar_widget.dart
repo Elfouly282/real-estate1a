@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:real_estate_1a/features/payment/presentation/screens/paymetscreen.dart';
+import 'package:real_estate_1a/features/property_details/domain/entities/property_details_entity.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constant/snakbar.dart';
@@ -8,8 +10,8 @@ import '../../../../core/utils/app_styles.dart';
 
 class DetailsBottomBarWidget extends StatelessWidget {
 
-  final String? agentPhone;
-  const DetailsBottomBarWidget({super.key, this.agentPhone});
+  final PropertyDetailsEntity pro;
+  const DetailsBottomBarWidget({super.key,required this.pro});
 
   @override
   Widget build(BuildContext context) {
@@ -57,21 +59,21 @@ class DetailsBottomBarWidget extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: ElevatedButton(
-              onPressed: () async {
-                print('agent phone: $agentPhone');
-                if (agentPhone != null) {
-                  final uri = Uri.parse('tel:$agentPhone');
-                  if (await canLaunchUrl(uri)) {
-                    await launchUrl(uri);
-                  }
-                } else {
-                  CustomSnackbar(
-                    AppColors.errorColor,
-                    'No phone number available',
-                    true,
-                  ).show(context);
-                }
-
+              onPressed: ()  {
+                // print('agent phone: $agentPhone');
+                // if (agentPhone != null) {
+                //   final uri = Uri.parse('tel:$agentPhone');
+                //   if (await canLaunchUrl(uri)) {
+                //     await launchUrl(uri);
+                //   }
+                // } else {
+                //   CustomSnackbar(
+                //     AppColors.errorColor,
+                //     'No phone number available',
+                //     true,
+                //   ).show(context);
+                // }
+              Navigator.of(context).pushNamed(Paymetscreen.routeName,arguments: pro);
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,

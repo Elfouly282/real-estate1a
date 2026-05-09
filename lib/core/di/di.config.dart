@@ -83,6 +83,9 @@ import 'package:real_estate_1a/features/maps/domain/usecase/get_marker.dart'
     as _i384;
 import 'package:real_estate_1a/features/maps/presentation/cubit/markers_cubit.dart'
     as _i522;
+import 'package:real_estate_1a/features/payment/data/paymentapi.dart' as _i847;
+import 'package:real_estate_1a/features/payment/presentation/cubit/payment_cubit.dart'
+    as _i640;
 import 'package:real_estate_1a/features/profile/data/profile_repo_impl.dart'
     as _i894;
 import 'package:real_estate_1a/features/profile/domain/profile_repo.dart'
@@ -117,6 +120,7 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i677.LocationService>(() => _i677.LocationService());
     gh.singleton<_i839.DioHelper>(() => _i839.DioHelper());
+    gh.lazySingleton<_i847.Paymentapi>(() => _i847.Paymentapi());
     gh.lazySingleton<_i596.SimilarPropertiesRepo>(
       () => _i1044.SimilarPropertiesRepoImpl(),
     );
@@ -131,6 +135,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i941.AuthRepo>(() => _i921.AuthRepoImpl());
     gh.factory<_i428.ChatDatasource>(
       () => _i565.ChatDatasourceImpl(apiManager: gh<_i779.ApiManager>()),
+    );
+    gh.factory<_i640.PaymentCubit>(
+      () => _i640.PaymentCubit(gh<_i847.Paymentapi>()),
     );
     gh.factory<_i785.AuthCubit>(
       () => _i785.AuthCubit(repo: gh<_i941.AuthRepo>()),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:real_estate_1a/features/payment/presentation/screens/paymetscreen.dart';
 import 'package:real_estate_1a/features/profile/presentation/screens/profile_screen.dart';
 import 'package:real_estate_1a/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        
         BlocProvider(create: (_) => getIt<MarkersCubit>()),
         BlocProvider<AppBarCubit>(create: (_) => getIt<AppBarCubit>()),
         BlocProvider<ChatCubit>(create: (_) => getIt<ChatCubit>()),
@@ -69,6 +71,7 @@ class MyApp extends StatelessWidget {
           home: const SplashScreen(),
           navigatorKey: navigatorKey,
           routes: {
+            Paymetscreen.routeName: (_)=>Paymetscreen() ,
             HomeScreen.routeName: (context) => const HomeScreen(),
             NotificationsScreen.routeName: (context) => NotificationsScreen(),
             ConversationsScreen.routeName: (context) {

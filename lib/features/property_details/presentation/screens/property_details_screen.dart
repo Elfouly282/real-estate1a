@@ -47,7 +47,7 @@ class PropertyDetailsScreen extends StatelessWidget {
           builder: (context, state) {
             if (state is DetailsSuccess) {
               return DetailsBottomBarWidget(
-                agentPhone: state.property.agent?.user.phone,
+               pro: state.property,
               );
             }
             return const SizedBox();

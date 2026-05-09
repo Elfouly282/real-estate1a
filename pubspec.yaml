@@ -13,6 +13,7 @@ dependencies:
 
   dio: ^5.9.2
   cupertino_icons: ^1.0.8
+  webview_flutter: ^4.9.0
   pretty_dio_logger: ^1.4.0
   flutter_screenutil: ^5.9.3
   google_fonts: ^8.0.2

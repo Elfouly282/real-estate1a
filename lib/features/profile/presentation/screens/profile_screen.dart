@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:real_estate_1a/core/utils/app_colors.dart';
 import 'package:real_estate_1a/features/profile/data/profile_repo_impl.dart';
 import 'package:real_estate_1a/features/profile/presentation/screens/personal_information_screen.dart';
@@ -30,6 +31,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     _cubit = getIt<ProfileCubit>()..getProfile();
   }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
@@ -38,8 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.white,
         body: RefreshIndicator(
           color: AppColors.primaryColor,
-          onRefresh: ()async{
-
+          onRefresh: () async {
             _cubit.getProfile();
           },
           child: BlocConsumer<ProfileCubit, ProfileState>(
@@ -56,7 +57,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               if (state is ProfileLoading) {
                 return const Center(
                   child: CircularProgressIndicator(
-                      color: AppColors.primaryColor),
+                    color: AppColors.primaryColor,
+                  ),
                 );
               }
               if (state is ProfileSuccess) {
@@ -95,7 +97,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AppColors.darkColor.withValues(alpha: 0.06),
+                                  color: AppColors.darkColor.withValues(
+                                    alpha: 0.06,
+                                  ),
                                   blurRadius: 10,
                                   offset: const Offset(0, 2),
                                 ),
@@ -104,69 +108,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Account Setting',
-                                 style: getLightStyle(
-                                  fontSize: 13,
-                                  color: AppColors.textSecondaryColor,
-                                         ),),
-                                  const SizedBox(height: 30,),
+                                Text(
+                                  'Account Setting',
+                                  style: getLightStyle(
+                                    fontSize: 13,
+                                    color: AppColors.textSecondaryColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 30),
                                 ProfileMenuItemWidget(
                                   image: Assets.icon.personalicon.path,
                                   title: 'Personal Information',
-                                 onTap: () {
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            PersonalInformationScreen(
+                                              user: state.user,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
 
-                                   Navigator.push(
-                                     context,
-                                     MaterialPageRoute(
-                                       builder: (_) => PersonalInformationScreen(user: state.user),
-                                     ),
-                                   );
-                                 },
-                                     ),
-
-                                const SizedBox(height: 18,),
+                                const SizedBox(height: 18),
                                 ProfileMenuItemWidget(
                                   image: Assets.icon.editaccount.path,
                                   title: 'My Account',
                                   onTap: () {
-
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => MyAccountScreen(user: state.user),
+                                        builder: (_) =>
+                                            MyAccountScreen(user: state.user),
                                       ),
                                     );
-
-
                                   },
                                 ),
 
-                                const SizedBox(height: 16,),
+                                SizedBox(height: 16.h),
 
-                                const Divider(height: 1,color: AppColors.grey,),
-                                const SizedBox(height: 24,),
-                                Text('Payment',
+                                // const Divider(height: 1,color: AppColors.grey,),
+                                // const SizedBox(height: 24,),
+                                // Text('Payment',
+                                //   style: getLightStyle(
+                                //     fontSize: 13,
+                                //     color: AppColors.textSecondaryColor,
+                                //   ),),
+                                //const SizedBox(height: 30,),
+                                // ProfileMenuItemWidget(
+                                //   image: Assets.icon.paymenticon.path,
+                                //   title: 'Payment Method',
+                                //   onTap: () {},
+                                // ),
+                                const SizedBox(height: 16),
+
+                                const Divider(height: 1, color: AppColors.grey),
+                                const SizedBox(height: 24),
+                                Text(
+                                  'Setting & Security',
                                   style: getLightStyle(
                                     fontSize: 13,
                                     color: AppColors.textSecondaryColor,
-                                  ),),
-                                const SizedBox(height: 30,),
-                                ProfileMenuItemWidget(
-                                  image: Assets.icon.paymenticon.path,
-                                  title: 'Payment Method',
-                                  onTap: () {},
+                                  ),
                                 ),
-
-                                const SizedBox(height: 16,),
-
-                                const Divider(height: 1,color: AppColors.grey,),
-                                const SizedBox(height: 24,),
-                                Text('Setting & Security',
-                                  style: getLightStyle(
-                                    fontSize: 13,
-                                    color: AppColors.textSecondaryColor,
-                                  ),),
-                                const SizedBox(height: 30,),
+                                const SizedBox(height: 30),
                                 ProfileMenuItemWidget(
                                   image: Assets.icon.passwordicon.path,
                                   title: 'Change Password',
@@ -174,26 +181,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => const ChangePasswordScreen(),
+                                        builder: (_) =>
+                                            const ChangePasswordScreen(),
                                       ),
                                     );
                                   },
                                 ),
 
-                                const SizedBox(height: 18,),
+                                const SizedBox(height: 18),
                                 ProfileMenuItemWidget(
                                   image: Assets.icon.notificationicon.path,
                                   title: 'Notification Preference',
                                   onTap: () {},
                                 ),
-
                               ],
                             ),
-                          )
-
-
-
-                          ,const SizedBox(height: 24),
+                          ),
+                          const SizedBox(height: 24),
                         ],
                       ),
                     ),

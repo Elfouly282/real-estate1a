@@ -21,3 +21,11 @@ class AuthError extends AuthState {
   final String message;
   AuthError(this.message);
 }
+
+
+class ForgotPasswordSuccess extends AuthState {
+  final String message;
+  ForgotPasswordSuccess({required this.message});
+}
+
+class ResetPasswordSuccess extends AuthState {}

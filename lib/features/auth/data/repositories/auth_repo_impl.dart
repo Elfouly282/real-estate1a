@@ -74,6 +74,8 @@ class AuthRepoImpl implements AuthRepo {
 
 
 
+//signInWithGoogle
+
   @override
   Future<Either<Failure, UserEntity>> signInWithGoogle() async {
     try {
@@ -99,6 +101,54 @@ class AuthRepoImpl implements AuthRepo {
     } catch (e) {
       print('❌ error: $e');
       return Left(ServiceFailure(message: e.toString()));
+    }
+  }
+
+//forget password
+
+  @override
+  Future<Either<Failure, String>> forgotPassword({required String email}) async {
+    try {
+      await DioHelper.postData(
+        url: AppConstants.forgotPassword,
+        data: {'email': email},
+      );
+      return const Right('Reset link sent to your email');
+    } on DioException catch (e) {
+      final message = e.response?.data?['message'] as String? ??
+          AppConstants.networkErrorMessage;
+      return Left(ApiFailure(message: message));
+    } catch (e) {
+      return Left(ApiFailure(message: AppConstants.unknownErrorMessage));
+    }
+  }
+
+
+  //reset password
+  @override
+  Future<Either<Failure, String>> resetPassword({
+    required String token,
+    required String email,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    try {
+      await DioHelper.postData(
+        url: AppConstants.resetPassword,
+        data: {
+          'otp': token,
+          'email': email,
+          'password': password,
+          'password_confirmation': passwordConfirmation,
+        },
+      );
+      return const Right('Password reset successfully');
+    } on DioException catch (e) {
+      final message = e.response?.data?['message'] as String? ??
+          AppConstants.networkErrorMessage;
+      return Left(ApiFailure(message: message));
+    } catch (e) {
+      return Left(ApiFailure(message: AppConstants.unknownErrorMessage));
     }
   }
 }

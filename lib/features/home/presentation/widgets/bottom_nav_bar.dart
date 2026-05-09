@@ -21,7 +21,12 @@ class AppNavBar extends StatelessWidget {
     _NavItem(activeImage: Assets.svg.activeFavourite, inactiveImage: Assets.svg.favorite, label: 'Favorite'),
     _NavItem(activeImage: Assets.svg.activeMap,      inactiveImage: Assets.svg.map,      label: 'Map'),
     _NavItem(activeImage: Assets.svg.activeHistory,  inactiveImage: Assets.svg.history,  label: 'History'),
-    _NavItem(activeImage: Assets.svg.profile,  inactiveImage: Assets.svg.profile,  label: 'Profile'),
+    _NavItem(
+    activeImage: '',
+    inactiveImage: '',
+    label: 'Profile',
+    isProfile: true,
+  ),
   ];
 
   @override
@@ -78,28 +83,40 @@ class _NavBarItem extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        width: 64,
+        width: 64.w,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding:  EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+              padding:  EdgeInsets.symmetric(horizontal: 2.w, vertical: 4.h),
               decoration: BoxDecoration(
                 color:Colors.transparent,
                 borderRadius: BorderRadius.circular(20.r),
               ),
-              child: CustomSvgImage(
-                width: 24.w,
-                height: 24.h,
-                path:  isSelected ? item.activeImage : item.inactiveImage,
-                color: isSelected ?AppColors.primaryColor:Color(0xff1E1E1E),
-              ),
+               child: item.isProfile
+    ? Icon(
+        Icons.person,
+        size: 20.sp,
+        color: isSelected
+            ? AppColors.primaryColor
+            : AppColors.grey,
+      )
+    : CustomSvgImage(
+        width: 24.w,
+        height: 24.h,
+        path: isSelected
+            ? item.activeImage
+            : item.inactiveImage,
+        color: isSelected
+            ? AppColors.primaryColor
+            : AppColors.grey,
+      ),
             ),
             const SizedBox(height: 2),
             AnimatedDefaultTextStyle(
               duration: const Duration(milliseconds: 200),
-              style:getSemiBold(fontSize: 12, color: isSelected ? AppColors.primaryColor : AppColors.grey,fontWeight: isSelected?FontWeight.w600:FontWeight.normal),
+              style:getSemiBold(fontSize: 10.sp, color: isSelected ? AppColors.primaryColor : AppColors.grey,fontWeight: isSelected?FontWeight.w600:FontWeight.normal),
               child: Text(item.label),
             ),
           ],
@@ -113,10 +130,12 @@ class _NavItem {
   final String activeImage;
   final String inactiveImage;
   final String label;
+  final bool isProfile;
 
   const _NavItem({
     required this.activeImage,
     required this.inactiveImage,
     required this.label,
+    this.isProfile = false,
   });
 }

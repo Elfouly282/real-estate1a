@@ -10,6 +10,7 @@ import 'package:real_estate_1a/features/maps/presentation/screens/mapsscreen.dar
 import 'package:real_estate_1a/features/maps/presentation/screens/widgets/appbar_map.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/bottom_nav_bar.dart';
 import 'package:real_estate_1a/features/home/presentation/widgets/home_app_bar.dart';
+import 'package:real_estate_1a/features/profile/presentation/screens/profile_screen.dart';
 import '../../../../../core/di/di.dart';
 class HomeScreen extends StatefulWidget {
   static String routeName="/HomeScreen";
@@ -24,9 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
     const HomeTab(),
     FavoritesTab(),
     MapTest (),
-    // const _PlaceholderPage(label: 'Map',color: Color(0xFFE6F1FB)),
      HistoryTab(),
-    const _PlaceholderPage(label: 'Profile',  color: Color(0xFFEEEDFE)),
+  ProfileScreen()
   ];
   @override
   Widget build(BuildContext context) {

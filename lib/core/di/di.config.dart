@@ -83,6 +83,12 @@ import 'package:real_estate_1a/features/maps/domain/usecase/get_marker.dart'
     as _i384;
 import 'package:real_estate_1a/features/maps/presentation/cubit/markers_cubit.dart'
     as _i522;
+import 'package:real_estate_1a/features/profile/data/profile_repo_impl.dart'
+    as _i894;
+import 'package:real_estate_1a/features/profile/domain/profile_repo.dart'
+    as _i5;
+import 'package:real_estate_1a/features/profile/presentation/cubit/profile_cubit.dart'
+    as _i929;
 import 'package:real_estate_1a/features/property_details/data/repositories/property_details_repo_impl.dart'
     as _i218;
 import 'package:real_estate_1a/features/property_details/data/repositories/reviews_repo_impl.dart'
@@ -120,6 +126,7 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i653.SimilarPropertiesCubit(repo: gh<_i596.SimilarPropertiesRepo>()),
     );
+    gh.lazySingleton<_i5.ProfileRepo>(() => _i894.ProfileRepoImpl());
     gh.lazySingleton<_i56.ReviewsRepo>(() => _i864.ReviewsRepoImpl());
     gh.lazySingleton<_i941.AuthRepo>(() => _i921.AuthRepoImpl());
     gh.factory<_i428.ChatDatasource>(
@@ -139,6 +146,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i812.FavoritesDatasource>(
       () => _i514.FavoritesRemoteDatasource(gh<_i779.ApiManager>()),
+    );
+    gh.factory<_i929.ProfileCubit>(
+      () => _i929.ProfileCubit(repo: gh<_i5.ProfileRepo>()),
     );
     gh.factory<_i896.HistoryDatasource>(
       () => _i853.HistoryRemoteDatasource(gh<_i779.ApiManager>()),

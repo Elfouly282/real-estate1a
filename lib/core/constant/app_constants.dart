@@ -17,6 +17,13 @@ class AppConstants {
 
   static const String propertyDetails = 'properties/';
   static const String propertyReviews = 'properties/';
+
+  static const String getProfile = 'auth/me';
+  static const String updateProfile = 'auth/profile';
+  static const String changePassword = 'auth/password';
+  static const String deleteAccount = 'auth/account';
+
+
   static const String sendResetPasswordOtpEndpoint =
       '/api/auth/send-restpassword-otp';
   static const String verifyResetPasswordOtpEndpoint =

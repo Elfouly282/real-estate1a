@@ -14,6 +14,7 @@ import '../../../../gen/assets.gen.dart';
 import '../cubit/auth_cubit.dart';
 import '../../../../../core/di.dart';
 import '../cubit/auth_state.dart';
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -176,7 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
                       Align(
                         alignment: Alignment.centerRight,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const ForgotPasswordScreen(),
+                              ),
+                            );
+                          },
                           child: Text(
                             'Forgot Password?',
                             style: getRegularStyle(

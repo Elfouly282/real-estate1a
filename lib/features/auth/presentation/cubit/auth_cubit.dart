@@ -49,4 +49,39 @@ class AuthCubit extends Cubit<AuthState> {
           (user) => emit(GoogleAuthSuccess(user)),
     );
   }
+
+   Future<void> forgotPassword({required String email}) async {
+    emit(AuthLoading());
+    final result = await repo.forgotPassword(email: email);
+    result.fold(
+          (failure) => emit(AuthError( failure.message)),
+          (message) => emit(ForgotPasswordSuccess(message: message)),
+    );
+  }
+
+  Future<void> resetPassword({
+    required String token,
+    required String email,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    emit(AuthLoading());
+    final result = await repo.resetPassword(
+      token: token,
+      email: email,
+      password: password,
+      passwordConfirmation: passwordConfirmation,
+    );
+    result.fold(
+          (failure) => emit(AuthError(failure.message)),
+          (_) => emit(ResetPasswordSuccess()),
+    );
+  }
+
+
 }
+
+
+
+
+ 

@@ -17,5 +17,15 @@ abstract class AuthRepo {
   Future<Either<Failure, UserEntity>> signInWithGoogle();
 
 
+  Future<Either<Failure, String>> forgotPassword({required String email});
+
+  Future<Either<Failure, String>> resetPassword({
+    required String token,
+    required String email,
+    required String password,
+    required String passwordConfirmation,
+  });
+
+
 
 }

@@ -53,6 +53,7 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return MultiBlocProvider(
       providers: [
         
@@ -99,6 +100,15 @@ class MyApp extends StatelessWidget {
             },
           },
         ),
+=======
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (context, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const SplashScreen(),
+>>>>>>> origin/forgot-reset-password
       ),
     );
   }

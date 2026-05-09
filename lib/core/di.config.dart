@@ -17,6 +17,12 @@ import 'package:real_estate_1a/features/auth/domain/repos/auth_repo.dart'
     as _i941;
 import 'package:real_estate_1a/features/auth/presentation/cubit/auth_cubit.dart'
     as _i785;
+import 'package:real_estate_1a/features/profile/data/profile_repo_impl.dart'
+    as _i894;
+import 'package:real_estate_1a/features/profile/domain/profile_repo.dart'
+    as _i5;
+import 'package:real_estate_1a/features/profile/presentation/cubit/profile_cubit.dart'
+    as _i929;
 import 'package:real_estate_1a/features/property_details/data/repositories/property_details_repo_impl.dart'
     as _i218;
 import 'package:real_estate_1a/features/property_details/data/repositories/reviews_repo_impl.dart'
@@ -51,6 +57,7 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i653.SimilarPropertiesCubit(repo: gh<_i596.SimilarPropertiesRepo>()),
     );
+    gh.lazySingleton<_i5.ProfileRepo>(() => _i894.ProfileRepoImpl());
     gh.lazySingleton<_i56.ReviewsRepo>(() => _i864.ReviewsRepoImpl());
     gh.lazySingleton<_i941.AuthRepo>(() => _i921.AuthRepoImpl());
     gh.factory<_i785.AuthCubit>(
@@ -61,6 +68,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.factory<_i756.DetailsCubit>(
       () => _i756.DetailsCubit(repo: gh<_i366.DetailsRepo>()),
+    );
+    gh.factory<_i929.ProfileCubit>(
+      () => _i929.ProfileCubit(repo: gh<_i5.ProfileRepo>()),
     );
     return this;
   }

@@ -41,6 +41,16 @@ class $AssetsIconGen {
   AssetGenImage get distanceicon =>
       const AssetGenImage('assets/icon/distanceicon.png');
 
+  /// File path: assets/icon/edit.png
+  AssetGenImage get edit => const AssetGenImage('assets/icon/edit.png');
+
+  /// File path: assets/icon/editaccount.png
+  AssetGenImage get editaccount =>
+      const AssetGenImage('assets/icon/editaccount.png');
+
+  /// File path: assets/icon/editicon.png
+  AssetGenImage get editicon => const AssetGenImage('assets/icon/editicon.png');
+
   /// File path: assets/icon/familyroom.png
   AssetGenImage get familyroom =>
       const AssetGenImage('assets/icon/familyroom.png');
@@ -61,6 +71,10 @@ class $AssetsIconGen {
   AssetGenImage get livingicon =>
       const AssetGenImage('assets/icon/livingicon.png');
 
+  /// File path: assets/icon/location1.png
+  AssetGenImage get location1 =>
+      const AssetGenImage('assets/icon/location1.png');
+
   /// File path: assets/icon/locationicon.png
   AssetGenImage get locationicon =>
       const AssetGenImage('assets/icon/locationicon.png');
@@ -77,8 +91,34 @@ class $AssetsIconGen {
   /// File path: assets/icon/logoo.svg
   String get logoo => 'assets/icon/logoo.svg';
 
+  /// File path: assets/icon/mail.png
+  AssetGenImage get mail => const AssetGenImage('assets/icon/mail.png');
+
   /// File path: assets/icon/message.png
   AssetGenImage get message => const AssetGenImage('assets/icon/message.png');
+
+  /// File path: assets/icon/myaccount.png
+  AssetGenImage get myaccount =>
+      const AssetGenImage('assets/icon/myaccount.png');
+
+  /// File path: assets/icon/notificationicon.png
+  AssetGenImage get notificationicon =>
+      const AssetGenImage('assets/icon/notificationicon.png');
+
+  /// File path: assets/icon/passwordicon.png
+  AssetGenImage get passwordicon =>
+      const AssetGenImage('assets/icon/passwordicon.png');
+
+  /// File path: assets/icon/paymenticon.png
+  AssetGenImage get paymenticon =>
+      const AssetGenImage('assets/icon/paymenticon.png');
+
+  /// File path: assets/icon/personalicon.png
+  AssetGenImage get personalicon =>
+      const AssetGenImage('assets/icon/personalicon.png');
+
+  /// File path: assets/icon/phone.png
+  AssetGenImage get phone => const AssetGenImage('assets/icon/phone.png');
 
   /// File path: assets/icon/rateicon.png
   AssetGenImage get rateicon => const AssetGenImage('assets/icon/rateicon.png');
@@ -97,6 +137,9 @@ class $AssetsIconGen {
   AssetGenImage get stariconn =>
       const AssetGenImage('assets/icon/stariconn.png');
 
+  /// File path: assets/icon/user1.png
+  AssetGenImage get user1 => const AssetGenImage('assets/icon/user1.png');
+
   /// List of all assets
   List<dynamic> get values => [
     appleicon,
@@ -106,22 +149,34 @@ class $AssetsIconGen {
     bedroomicon,
     call,
     distanceicon,
+    edit,
+    editaccount,
+    editicon,
     familyroom,
     garagicon,
     googleicon,
     kitchanicon,
     livingicon,
+    location1,
     locationicon,
     loggo,
     logo1,
     logo2,
     logoo,
+    mail,
     message,
+    myaccount,
+    notificationicon,
+    passwordicon,
+    paymenticon,
+    personalicon,
+    phone,
     rateicon,
     saleicon,
     shareicon,
     staricon,
     stariconn,
+    user1,
   ];
 }
 

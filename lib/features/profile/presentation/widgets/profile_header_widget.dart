@@ -25,12 +25,12 @@ class ProfileHeaderWidget extends StatelessWidget {
             _buildAvatar()
         ),
 
-        Positioned(
-            bottom: -50,
-            right: 16,
-            child:
-            _buildEditIcon()
-        ),
+        // Positioned(
+        //     bottom: -50,
+        //     right: 16,
+        //     child:
+        //     _buildEditIcon()
+        // ),
       ],
     );
   }
